@@ -297,7 +297,7 @@ function MostEatenMeals({ days }: { days: string[] }) {
       .sort((left, right) => right.count - left.count);
 
     return {
-      freq: sorted.slice(0, 7),
+      freq: sorted.slice(0, 7),  // top 7 only
       totalServings: sorted.reduce((sum, item) => sum + item.count, 0),
       uniqueFoods: sorted.length,
       topCalFood: [...sorted].sort((left, right) => right.avgCal - left.avgCal)[0],
@@ -479,12 +479,14 @@ function MostEatenMeals({ days }: { days: string[] }) {
             </div>
           )}
 
-          {/* Food ranking grid — structured 2-column grid */}
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {freq.map((item, i) => (
-              <FoodRow key={item.name} item={item} i={i} compact={i >= 6} />
-            ))}
-          </div>
+          {/* Food ranking grid — ranks 4–7 only (top 3 shown in podium above) */}
+          {freq.length > 3 && (
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {freq.slice(3, 7).map((item, i) => (
+                <FoodRow key={item.name} item={item} i={i + 3} compact={false} />
+              ))}
+            </div>
+          )}
 
           {/* Legend */}
           <div className="flex flex-wrap items-center gap-3 rounded-xl border border-brand/10 bg-white/2 px-3 py-2 mt-3">

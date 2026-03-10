@@ -1,0 +1,85 @@
+name: Tauri Linux Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build Tauri app
+        env:
+          TAURI_PRIVATE_KEY: ""
+          TAURI_KEY_PASSWORD: ""
+        run: npm run tauri:build
+
+      - name: Show bundle tree
+        run: ls -laR src-tauri/target/release/bundle || true
+
+      # Create comprehensive Linux package
+      - name: Create Linux Complete Package
+        run: |
+          VERSION=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          PACKAGE_DIR="dist/MealQuest-Linux-v${VERSION}"
+          mkdir -p "$PACKAGE_DIR"
+          
+          # Copy AppImage
+          cp src-tauri/target/release/bundle/appimage/*.AppImage "$PACKAGE_DIR/" 2>/dev/null || true
+          
+          # Copy DEB package
+          cp src-tauri/target/release/bundle/deb/*.deb "$PACKAGE_DIR/" 2>/dev/null || true
+          
+          # Create portable executable folder
+          mkdir -p "$PACKAGE_DIR/Portable"
+          cp src-tauri/target/release/mealquest "$PACKAGE_DIR/Portable/" 2>/dev/null || true
+          cp icons/icon.png "$PACKAGE_DIR/Portable/" 2>/dev/null || true
+          
+          # Copy documentation
+          cp LICENSE "$PACKAGE_DIR/LICENSE.txt" 2>/dev/null || true
+          cp README.md "$PACKAGE_DIR/README.txt" 2>/dev/null || true
+          
+          # Create ZIP
+          cd dist
+          zip -r "MealQuest-Linux-v${VERSION}-Complete.zip" "MealQuest-Linux-v${VERSION}/"
+
+      - name: Upload Linux Complete Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: MealQuest-Linux-Complete
+          path: dist/MealQuest-Linux-v*-Complete.zip

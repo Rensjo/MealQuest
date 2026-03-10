@@ -1,0 +1,86 @@
+{
+  "$schema": "https://tauri.app/v2/config",
+  "productName": "MealQuest",
+  "version": "1.2.0",
+  "identifier": "app.renkaistudios.mealquest",
+  "build": {
+    "beforeDevCommand": "vite --port 5175",
+    "beforeBuildCommand": "vite build",
+    "devUrl": "http://localhost:5175",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "MealQuest — Nutrition Tracker",
+        "width": 1100,
+        "height": 720,
+        "minWidth": 800,
+        "minHeight": 600,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$APPDATA/*",
+          "$RESOURCE/*"
+        ]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "../icons/32x32.png",
+      "../icons/128x128.png",
+      "../icons/icon.icns",
+      "../icons/icon.ico"
+    ],
+    "resources": [
+      "../public/icons/*"
+    ],
+    "publisher": "Renkai Studios",
+    "copyright": "Copyright © 2025 Renkai Studios. All rights reserved.",
+    "category": "Lifestyle",
+    "shortDescription": "Gamified nutrition tracking and meal planning",
+    "longDescription": "MealQuest is a gamified nutrition tracking and meal planning desktop app. Part of the QuestlyKai ecosystem. Track meals, plan nutrition, manage your pantry, complete quests, earn XP, and level up your healthy eating habits!",
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "",
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      },
+      "wix": {
+        "language": "en-US"
+      },
+      "nsis": null
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.13",
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "linux": {
+      "deb": {
+        "depends": []
+      },
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    }
+  },
+  "plugins": {
+    "notification": {
+      "all": true
+    }
+  }
+}

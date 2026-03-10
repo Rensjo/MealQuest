@@ -1,0 +1,77 @@
+name: Tauri Windows Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build Tauri app
+        env:
+          TAURI_PRIVATE_KEY: ""
+          TAURI_KEY_PASSWORD: ""
+        run: npm run tauri:build
+
+      - name: Show bundle tree
+        run: Get-ChildItem -Recurse src-tauri\target\release\bundle
+
+      # Create comprehensive Windows package
+      - name: Create Windows Complete Package
+        run: |
+          $version = (Get-Content src-tauri\tauri.conf.json | ConvertFrom-Json).version
+          $packageDir = "dist\MealQuest-Windows-v$version"
+          New-Item -ItemType Directory -Force -Path $packageDir
+          
+          # Copy installers
+          Copy-Item "src-tauri\target\release\bundle\msi\*.msi" "$packageDir\" -ErrorAction SilentlyContinue
+          Copy-Item "src-tauri\target\release\bundle\nsis\*.exe" "$packageDir\" -ErrorAction SilentlyContinue
+          
+          # Create portable executable
+          $portableDir = "$packageDir\Portable"
+          New-Item -ItemType Directory -Force -Path $portableDir
+          Copy-Item "src-tauri\target\release\MealQuest.exe" "$portableDir\" -ErrorAction Stop
+          if (Test-Path "icons\icon.ico") {
+            Copy-Item "icons\icon.ico" "$portableDir\" -ErrorAction SilentlyContinue
+          }
+          
+          # Copy documentation
+          Copy-Item "LICENSE" "$packageDir\LICENSE.txt" -ErrorAction SilentlyContinue
+          Copy-Item "README.md" "$packageDir\README.txt" -ErrorAction SilentlyContinue
+          
+          # Create ZIP
+          Compress-Archive -Path "$packageDir\*" -DestinationPath "dist\MealQuest-Windows-v$version-Complete.zip" -Force
+
+      - name: Upload Windows Complete Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: MealQuest-Windows-Complete
+          path: dist/MealQuest-Windows-v*-Complete.zip

@@ -1,0 +1,69 @@
+name: Tauri macOS Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build Tauri app (Universal)
+        env:
+          TAURI_PRIVATE_KEY: ""
+          TAURI_KEY_PASSWORD: ""
+        run: npm run tauri:build -- --target universal-apple-darwin
+
+      - name: Show bundle tree
+        run: ls -laR src-tauri/target/universal-apple-darwin/release/bundle || true
+
+      # Create comprehensive macOS package
+      - name: Create macOS Complete Package
+        run: |
+          VERSION=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          PACKAGE_DIR="dist/MealQuest-macOS-v${VERSION}"
+          mkdir -p "$PACKAGE_DIR"
+          
+          # Copy DMG installer
+          cp src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg "$PACKAGE_DIR/" 2>/dev/null || true
+          
+          # Copy documentation
+          cp LICENSE "$PACKAGE_DIR/LICENSE.txt" 2>/dev/null || true
+          cp README.md "$PACKAGE_DIR/README.txt" 2>/dev/null || true
+          
+          # Create ZIP
+          cd dist
+          zip -r "MealQuest-macOS-v${VERSION}-Complete.zip" "MealQuest-macOS-v${VERSION}/"
+
+      - name: Upload macOS Complete Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: MealQuest-macOS-Complete
+          path: dist/MealQuest-macOS-v*-Complete.zip

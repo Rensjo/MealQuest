@@ -36,6 +36,23 @@ import type { Badge, BadgeTier } from '@/types';
 
 const WHATS_NEW: { version: string; date: string; entries: string[] }[] = [
   {
+    version: 'v1.3 — Smart Intelligence Update',
+    date: 'Mar 2026',
+    entries: [
+      'Smart Nutrition Score: daily 0–100 score with S–F grade and 5-category breakdown (meal consistency, macros, hydration, sugar control, home-cooked)',
+      'Weekly Insights engine: auto-detects meal consistency, protein trends, hydration levels, and home-cooking ratios',
+      'Habit Pattern Detection: identifies positive and negative eating habits across 14 days of data',
+      'Meal Suggestion Engine: personalized recommendations scored by diet strategy, pantry ingredient match, and variety',
+      'Predictive Grocery System: forecasts what you need to buy based on meal frequency and pantry stock levels',
+      'Smart Notifications: context-aware meal reminders, hydration alerts, grocery trip reminders, and pantry expiry warnings',
+      'Monthly Trend Charts: 12-month area chart of nutrition score and consistency',
+      'Pantry Auto-Deduction: cooking a recipe now automatically deducts matched ingredients from pantry inventory',
+      'Adaptive Quest Difficulty: daily missions scale up to 5 tiers as your completion streak grows',
+      'Smart Badges: 4 new achievements — Data Starter, Insight Seeker, Nutrition Analyst, AI Master Chef',
+      'Smart Intelligence Dashboard: bento-grid layout with uniform row heights and fluid card sizing',
+    ],
+  },
+  {
     version: 'v1.2 — Full Experience Update',
     date: 'Mar 2025',
     entries: [
@@ -493,7 +510,7 @@ export default function SettingsPage() {
       <div className="flex items-center gap-3 rounded-2xl border border-brand/8 bg-white/[0.01] p-4">
         <Info size={14} className="text-amber-200/25" />
         <p className="text-xs text-amber-200/30">
-          MealQuest v1.2.0 · Part of the QuestlyKai Ecosystem · Built with React, TypeScript & Tauri
+          MealQuest v1.3.0 · Part of the QuestlyKai Ecosystem · Built with React, TypeScript & Tauri
         </p>
       </div>
     </motion.div>

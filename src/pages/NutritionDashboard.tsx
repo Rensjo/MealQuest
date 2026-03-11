@@ -21,6 +21,11 @@ import {
   FoodSourceWidget, CalorieTrendWidget, MacroBalanceWidget,
   FOOD_SOURCE_META,
 } from '@/components/dashboard/DashboardWidgets';
+import {
+  NutritionScoreCard, InsightPanel, HabitPatternCard,
+  MealSuggestionPanel, GroceryPredictionPanel,
+  SmartNotificationBanner, MonthlyTrendChart,
+} from '@/components/dashboard/SmartWidgets';
 import { QuickMealLog }       from '@/components/dashboard/QuickMealLog';
 import UserStatusPanel        from '@/components/gaming/UserStatusPanel';
 import { cn, isLiquidLog }  from '@/utils';
@@ -763,6 +768,9 @@ export default function NutritionDashboard() {
       {/* User Status Panel */}
       <UserStatusPanel isOpen={showProfile} onClose={() => setShowProfile(false)} />
 
+      {/* Smart Notifications Banner */}
+      <SmartNotificationBanner />
+
       <div>
         <SectionTitle sub="Check off your 3 meals and snacks for today">Today's Meals</SectionTitle>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -825,7 +833,34 @@ export default function NutritionDashboard() {
         </div>
       </div>
 
-      {/* ROW 6 — Full-width year heatmap */}
+      {/* ROW 6 — Phase 3: Smart Intelligence (Bento Grid) */}
+      <div className="space-y-4">
+        <SectionTitle sub="AI-powered analysis of your nutrition habits">Smart Intelligence</SectionTitle>
+        {/*
+         * Bento layout — 4-column CSS grid.
+         * CSS Grid default align-items:stretch makes every cell in a row the
+         * same height as the tallest cell so no explicit row heights needed.
+         *
+         *  Row 1 │ Score (1) │ Weekly Insights (2) │ Habit Patterns (1) │
+         *  Row 2 │ Monthly Trend Chart (3)          │ Grocery Plans (1)  │
+         *  Row 3 │ Meal Suggestions ── full width ──────────────────────  │
+         */}
+        <div className="grid grid-cols-4 gap-4">
+          {/* ── Row 1 ── */}
+          <NutritionScoreCard />
+          <div className="col-span-2 h-full"><InsightPanel /></div>
+          <HabitPatternCard />
+
+          {/* ── Row 2 ── */}
+          <div className="col-span-3 h-full"><MonthlyTrendChart /></div>
+          <GroceryPredictionPanel />
+
+          {/* ── Row 3 ── */}
+          <div className="col-span-4"><MealSuggestionPanel /></div>
+        </div>
+      </div>
+
+      {/* ROW 7 — Full-width year heatmap */}
       <div>
         <SectionTitle sub="Your meal logging activity over the past year">Year in Review</SectionTitle>
         <MealHeatmap />

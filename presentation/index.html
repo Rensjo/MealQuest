@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MealQuest — Feature Presentation</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand:   #f59e0b;
+      --brand2:  #fbbf24;
+      --dark:    #0f0f13;
+      --surface: #1a1a24;
+      --card:    #22222f;
+      --card2:   #2a2a3a;
+      --border:  #35354a;
+      --text:    #e5e7eb;
+      --muted:   #8b8fa8;
+      --green:   #22c55e;
+      --blue:    #3b82f6;
+      --purple:  #a855f7;
+      --red:     #ef4444;
+      --cyan:    #06b6d4;
+      --orange:  #f97316;
+    }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--dark); color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── Navigation ───────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(15,15,19,.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 56px;
+    }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--brand); letter-spacing: .04em; }
+    .nav-dots { display: flex; gap: .5rem; align-items: center; }
+    .nav-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border); cursor: pointer; transition: background .2s, transform .2s;
+      border: none;
+    }
+    .nav-dot.active { background: var(--brand); transform: scale(1.3); }
+    .nav-arrows { display: flex; gap: .5rem; }
+    .nav-btn {
+      background: var(--card); border: 1px solid var(--border); color: var(--text);
+      padding: .35rem .85rem; border-radius: 8px; cursor: pointer; font-size: .82rem;
+      transition: background .2s; user-select: none;
+    }
+    .nav-btn:hover { background: var(--card2); }
+    .slide-counter { font-size: .8rem; color: var(--muted); min-width: 48px; text-align: center; }
+
+    /* ─── Slides ───────────────────────────────────────────────────── */
+    .slides { padding-top: 56px; }
+    .slide {
+      min-height: 100vh; display: none; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 3rem 4rem; position: relative; overflow: hidden;
+    }
+    .slide.active { display: flex; }
+
+    /* ─── Shared Section Helpers ───────────────────────────────────── */
+    .slide-tag {
+      display: inline-block; font-size: .72rem; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase; padding: .3rem .85rem;
+      border-radius: 100px; background: rgba(245,158,11,.15);
+      border: 1px solid rgba(245,158,11,.35); color: var(--brand);
+      margin-bottom: 1rem;
+    }
+    .slide-title {
+      font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; line-height: 1.15;
+      text-align: center; letter-spacing: -.02em;
+    }
+    .slide-subtitle {
+      font-size: clamp(.95rem, 1.5vw, 1.2rem); color: var(--muted);
+      text-align: center; max-width: 680px; margin: .75rem auto 0;
+      line-height: 1.6;
+    }
+    .accent { color: var(--brand); }
+    .accent-green { color: var(--green); }
+    .accent-blue  { color: var(--blue);  }
+    .accent-purple{ color: var(--purple);}
+    .accent-cyan  { color: var(--cyan);  }
+
+    .divider { width: 64px; height: 3px; background: var(--brand); border-radius: 4px; margin: 1.25rem auto; }
+
+    /* ─── Callout Pills ────────────────────────────────────────────── */
+    .callouts { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; margin-top: 1.5rem; }
+    .callout {
+      display: flex; align-items: center; gap: .45rem;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 100px; padding: .4rem 1rem; font-size: .82rem; font-weight: 500;
+    }
+    .callout .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ─── Content Grid ─────────────────────────────────────────────── */
+    .content-grid {
+      display: grid; gap: 2rem; width: 100%; max-width: 1200px;
+      margin: 2.5rem auto 0;
+    }
+    .g2 { grid-template-columns: 1fr 1fr; }
+    .g3 { grid-template-columns: 1fr 1fr 1fr; }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+
+    /* ─── Feature Card ─────────────────────────────────────────────── */
+    .feat-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem; position: relative; overflow: hidden;
+    }
+    .feat-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(245,158,11,.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .feat-icon {
+      width: 40px; height: 40px; border-radius: 10px; display: flex;
+      align-items: center; justify-content: center; font-size: 1.25rem;
+      margin-bottom: .85rem;
+    }
+    .feat-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: .4rem; }
+    .feat-card p  { font-size: .8rem; color: var(--muted); line-height: 1.55; }
+    .feat-card ul { list-style: none; margin-top: .6rem; display: flex; flex-direction: column; gap: .3rem; }
+    .feat-card ul li { font-size: .78rem; color: var(--muted); display: flex; align-items: flex-start; gap: .4rem; }
+    .feat-card ul li::before { content: '›'; color: var(--brand); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+
+    /* ─── Mockup Screen ────────────────────────────────────────────── */
+    .mockup-wrap {
+      width: 100%; max-width: 740px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,.55);
+    }
+    .mockup-bar {
+      background: var(--card); display: flex; align-items: center;
+      gap: .5rem; padding: .6rem 1rem; border-bottom: 1px solid var(--border);
+    }
+    .mb-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-title { font-size: .78rem; color: var(--muted); margin-left: auto; margin-right: auto; }
+    .mockup-body { padding: 1.25rem; }
+
+    /* ─── Mini Widgets (used inside mockups) ──────────────────────── */
+    .mw-row { display: flex; gap: .75rem; margin-bottom: .75rem; }
+    .mw-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: .85rem 1rem; flex: 1;
+    }
+    .mw-card-wide { flex: 2; }
+    .mw-label { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .3rem; }
+    .mw-val  { font-size: 1.4rem; font-weight: 700; line-height: 1; }
+    .mw-sub  { font-size: .7rem; color: var(--muted); margin-top: .2rem; }
+
+    /* Progress bar */
+    .prog-bar { height: 6px; border-radius: 4px; background: var(--border); margin-top: .5rem; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 4px; }
+
+    /* Ring */
+    .ring-wrap { display: flex; align-items: center; gap: .6rem; }
+    .ring-svg   { flex-shrink: 0; }
+
+    /* Meal slot row */
+    .meal-slot {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .6rem .85rem; border-radius: 10px;
+      background: var(--card2); margin-bottom: .5rem; border: 1px solid var(--border);
+    }
+    .meal-slot-left { display: flex; align-items: center; gap: .6rem; }
+    .slot-icon { font-size: 1.1rem; }
+    .slot-label { font-size: .8rem; font-weight: 600; }
+    .slot-foods { font-size: .7rem; color: var(--muted); }
+    .slot-cals  { font-size: .8rem; font-weight: 700; color: var(--brand); }
+    .slot-check { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .65rem; }
+
+    /* Badge pill */
+    .tier-pill {
+      display: inline-block; font-size: .65rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; border-radius: 100px;
+      padding: .2rem .55rem; border: 1px solid;
+    }
+    .tier-gold     { background: rgba(251,191,36,.15); border-color: rgba(251,191,36,.5); color: #fbbf24; }
+    .tier-silver   { background: rgba(156,163,175,.15); border-color: rgba(156,163,175,.5); color: #9ca3af; }
+    .tier-bronze   { background: rgba(180,83,9,.15); border-color: rgba(180,83,9,.5); color: #b45309; }
+    .tier-platinum { background: rgba(168,85,247,.15); border-color: rgba(168,85,247,.5); color: #a855f7; }
+
+    /* XP chip */
+    .xp-chip { background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.3); color: var(--brand); border-radius: 100px; padding: .15rem .55rem; font-size: .68rem; font-weight: 700; }
+
+    /* ─── Bento Grid (Smart Intelligence mockup) ──────────────────── */
+    .bento { display: grid; grid-template-columns: repeat(4,1fr); gap: .55rem; }
+    .bento .b1 { grid-column: span 1; }
+    .bento .b2 { grid-column: span 2; }
+    .bento .b3 { grid-column: span 3; }
+    .bento .b4 { grid-column: span 4; }
+    .b-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: .75rem; min-height: 100px;
+    }
+    .b-title { font-size: .72rem; font-weight: 700; margin-bottom: .4rem; color: var(--text); }
+    .b-muted { font-size: .67rem; color: var(--muted); }
+
+    /* Score ring */
+    .score-big { font-size: 2.2rem; font-weight: 800; line-height: 1; text-align: center; }
+    .score-grade { text-align: center; font-size: .85rem; font-weight: 700; color: var(--green); }
+
+    /* Insight list */
+    .insight-item {
+      display: flex; align-items: flex-start; gap: .4rem; margin-bottom: .35rem;
+    }
+    .i-dot  { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: .2rem; }
+    .i-text { font-size: .67rem; color: var(--muted); }
+
+    /* ─── Gamification ─────────────────────────────────────────────── */
+    .mission-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: .65rem .85rem; display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: .4rem;
+    }
+    .mc-title { font-size: .78rem; font-weight: 600; }
+    .mc-desc  { font-size: .67rem; color: var(--muted); }
+    .mc-check {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .mc-done  { background: var(--green); border-color: var(--green); }
+
+    .boss-bar { height: 10px; background: var(--border); border-radius: 6px; overflow: hidden; margin: .5rem 0; }
+    .boss-fill { height: 100%; background: linear-gradient(90deg, #ef4444, #f97316); border-radius: 6px; }
+
+    /* ─── Strategy buttons ─────────────────────────────────────────── */
+    .strategies { display: grid; grid-template-columns: repeat(5,1fr); gap: .5rem; margin: .5rem 0; }
+    .strat-btn {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: .5rem .25rem; text-align: center;
+      font-size: .7rem; cursor: default;
+    }
+    .strat-btn.active { background: rgba(245,158,11,.12); border-color: var(--brand); color: var(--brand); }
+    .strat-icon { font-size: 1.15rem; display: block; margin-bottom: .2rem; }
+
+    /* ─── Slide-specific backgrounds ──────────────────────────────── */
+    .slide-01 { background: radial-gradient(ellipse 120% 100% at 50% -10%, rgba(245,158,11,.18) 0%, transparent 60%), var(--dark); }
+    .slide-02 { background: radial-gradient(ellipse 100% 80% at 80% 50%, rgba(59,130,246,.1) 0%, transparent 60%), var(--dark); }
+    .slide-03 { background: var(--dark); }
+    .slide-04 { background: radial-gradient(ellipse 100% 80% at 20% 80%, rgba(34,197,94,.09) 0%, transparent 60%), var(--dark); }
+    .slide-05 { background: radial-gradient(ellipse 100% 80% at 80% 20%, rgba(168,85,247,.09) 0%, transparent 60%), var(--dark); }
+    .slide-06 { background: radial-gradient(ellipse 100% 80% at 20% 20%, rgba(59,130,246,.09) 0%, transparent 60%), var(--dark); }
+    .slide-07 { background: radial-gradient(ellipse 100% 80% at 80% 80%, rgba(245,158,11,.1) 0%, transparent 60%), var(--dark); }
+    .slide-08 { background: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(6,182,212,.08) 0%, transparent 60%), var(--dark); }
+    .slide-09 { background: radial-gradient(ellipse 100% 80% at 20% 50%, rgba(168,85,247,.08) 0%, transparent 60%), var(--dark); }
+    .slide-10 { background: radial-gradient(ellipse 120% 100% at 50% 110%, rgba(245,158,11,.2) 0%, transparent 55%), var(--dark); }
+
+    /* ─── CTA ──────────────────────────────────────────────────────── */
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--brand); color: #000; font-weight: 700;
+      font-size: .95rem; padding: .85rem 2.25rem; border-radius: 12px;
+      text-decoration: none; margin: .4rem; transition: opacity .2s;
+    }
+    .cta-btn:hover { opacity: .85; }
+    .cta-btn-outline {
+      background: transparent; border: 2px solid var(--brand); color: var(--brand);
+    }
+    .cta-btn-outline:hover { background: rgba(245,158,11,.1); opacity: 1; }
+
+    /* platform badges */
+    .platform-badges { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+    .plat-badge {
+      display: flex; align-items: center; gap: .5rem;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: .55rem 1.1rem; font-size: .82rem; font-weight: 600;
+    }
+
+    /* ─── Anim decorations ─────────────────────────────────────────── */
+    .glow-orb {
+      position: absolute; border-radius: 50%; filter: blur(80px);
+      pointer-events: none; z-index: 0;
+    }
+    .slide > * { position: relative; z-index: 1; }
+
+    /* ─── Stats row ────────────────────────────────────────────────── */
+    .stats-row { display: flex; gap: 2rem; justify-content: center; margin-top: 1.75rem; flex-wrap: wrap; }
+    .stat-item { text-align: center; }
+    .stat-num  { font-size: 2.2rem; font-weight: 800; color: var(--brand); line-height: 1; }
+    .stat-lbl  { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
+
+    /* ─── Footer note ──────────────────────────────────────────────── */
+    .footer-note {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(15,15,19,.9); backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.5rem; padding: .45rem 2rem; font-size: .72rem; color: var(--muted);
+    }
+    .footer-note span { display: flex; align-items: center; gap: .3rem; }
+
+    /* ─── Responsive ───────────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .slide { padding: 4.5rem 1.5rem 4rem; }
+      .g2, .g3, .g4 { grid-template-columns: 1fr; }
+      .bento { grid-template-columns: 1fr 1fr; }
+      .bento .b3, .bento .b4 { grid-column: span 2; }
+      .strategies { grid-template-columns: repeat(5,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-logo">🍽 MealQuest</div>
+  <div class="nav-dots" id="navDots"></div>
+  <div style="display:flex;align-items:center;gap:.75rem;">
+    <div class="nav-arrows">
+      <button class="nav-btn" onclick="prevSlide()">← Prev</button>
+      <span class="slide-counter" id="slideCounter">1 / 10</span>
+      <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+  </div>
+</nav>
+
+<div class="slides" id="slides">
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 1 — Hero / Title                                        -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-01" id="slide-1">
+    <div class="glow-orb" style="width:500px;height:500px;top:-120px;left:50%;transform:translateX(-50%);background:rgba(245,158,11,.22);"></div>
+
+    <div class="slide-tag">v1.3 — Smart Intelligence Update · Mar 2026</div>
+
+    <div class="slide-title">
+      Level Up Your<br><span class="accent">Nutrition Journey</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="slide-subtitle">
+      MealQuest is a gamified nutrition tracking desktop app — log meals, manage your pantry,
+      complete quests, earn XP, and unlock smart AI-powered insights. All offline. All private.
+    </p>
+
+    <div class="callouts" style="margin-top:2.25rem;">
+      <div class="callout"><span class="dot" style="background:var(--brand)"></span> Fully Offline & Private</div>
+      <div class="callout"><span class="dot" style="background:var(--green)"></span> Windows · macOS · Linux</div>
+      <div class="callout"><span class="dot" style="background:var(--blue)"></span> React 18 + Tauri v2</div>
+      <div class="callout"><span class="dot" style="background:var(--purple)"></span> 16 Zustand Stores</div>
+      <div class="callout"><span class="dot" style="background:var(--cyan)"></span> 7 Smart Intelligence Widgets</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">5</div><div class="stat-lbl">App Pages</div></div>
+      <div class="stat-item"><div class="stat-num">28</div><div class="stat-lbl">Badges</div></div>
+      <div class="stat-item"><div class="stat-num">25</div><div class="stat-lbl">Daily Quest Pool</div></div>
+      <div class="stat-item"><div class="stat-num">10</div><div class="stat-lbl">Weekly Bosses</div></div>
+      <div class="stat-item"><div class="stat-num">∞</div><div class="stat-lbl">XP Levels</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 2 — App Overview                                        -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-02" id="slide-2">
+    <div class="slide-tag">App Overview</div>
+    <div class="slide-title">Everything You Need to<br><span class="accent">Eat Smarter</span></div>
+    <p class="slide-subtitle">Five core pages. One seamless experience. Zero internet required.</p>
+    <div class="divider"></div>
+
+    <div class="content-grid g3" style="max-width:980px;">
+      <div class="feat-card">
+        <div class="feat-icon" style="background:rgba(245,158,11,.15);">🏠</div>
+        <h3>Nutrition Dashboard</h3>
+        <p>Your daily command center — meal slots, health indicator, trackers, charts, and Smart Intelligence widgets in a bento-grid layout.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:rgba(34,197,94,.15);">📝</div>
+        <h3>Meal Log</h3>
+        <p>Rapid food entry with auto-nutrition estimation, portion presets, date navigation, and food-source tagging.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:rgba(168,85,247,.15);">🍱</div>
+        <h3>Food Hub</h3>
+        <p>Unified space for Recipes, Pantry inventory, and Grocery shopping — with auto-sync between all three.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:rgba(59,130,246,.15);">🎯</div>
+        <h3>Nutrition Goals</h3>
+        <p>Set daily macro targets, pick a diet strategy preset (Keto, High Protein, etc.), and track progress rings in real time.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:rgba(245,158,11,.15);">⚙️</div>
+        <h3>Settings & Badges</h3>
+        <p>Manage preferences, audio, and data backups. Browse your full badge gallery and explore the version changelog.</p>
+      </div>
+      <div class="feat-card" style="border-color:rgba(245,158,11,.3);">
+        <div class="feat-icon" style="background:rgba(245,158,11,.2);">🔒</div>
+        <h3>100% Offline & Private</h3>
+        <p>All data is stored locally in <code style="font-size:.75rem;color:var(--brand)">localStorage</code> via Zustand persist. No server, no telemetry, no account required.</p>
+      </div>
+    </div>
+
+    <div class="callouts" style="margin-top:1.5rem;">
+      <div class="callout"><span class="dot" style="background:var(--brand)"></span> Built with React 18.3 + TypeScript 5.5</div>
+      <div class="callout"><span class="dot" style="background:var(--green)"></span> Tauri v2 cross-platform desktop shell</div>
+      <div class="callout"><span class="dot" style="background:var(--blue)"></span> Tailwind CSS 3.4 + Framer Motion 11</div>
+      <div class="callout"><span class="dot" style="background:var(--cyan)"></span> Recharts for all data visualizations</div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 3 — Nutrition Dashboard                                  -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-03" id="slide-3">
+    <div class="slide-tag">Page 1 — Nutrition Dashboard</div>
+    <div class="slide-title">Your Daily <span class="accent">Command Center</span></div>
+    <p class="slide-subtitle">Everything about today's nutrition at a glance — meals, health status, charts, and real-time progress.</p>
+    <div class="divider"></div>
+
+    <div class="content-grid g2" style="max-width:1100px;align-items:start;">
+      <!-- Mockup -->
+      <div class="mockup-wrap">
+        <div class="mockup-bar">
+          <div class="mb-dot" style="background:#ef4444;"></div>
+          <div class="mb-dot" style="background:var(--brand);"></div>
+          <div class="mb-dot" style="background:var(--green);"></div>
+          <div class="mockup-title">NutritionDashboard.tsx</div>
+        </div>
+        <div class="mockup-body">
+          <!-- Meal slots -->
+          <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;">Today's Meals</div>
+          <div class="meal-slot">
+            <div class="meal-slot-left">
+              <span class="slot-icon">☀️</span>
+              <div><div class="slot-label">Breakfast</div><div class="slot-foods">Oatmeal, Banana, Coffee</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <span class="slot-cals">420 kcal</span>
+              <div class="slot-check" style="background:var(--green);color:#000;">✓</div>
+            </div>
+          </div>
+          <div class="meal-slot">
+            <div class="meal-slot-left">
+              <span class="slot-icon">🌤</span>
+              <div><div class="slot-label">Lunch</div><div class="slot-foods">Chicken Rice, Salad</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <span class="slot-cals">680 kcal</span>
+              <div class="slot-check" style="background:var(--green);color:#000;">✓</div>
+            </div>
+          </div>
+          <div class="meal-slot" style="border-color:rgba(245,158,11,.3);">
+            <div class="meal-slot-left">
+              <span class="slot-icon">🌙</span>
+              <div><div class="slot-label">Dinner</div><div class="slot-foods" style="color:var(--brand);">Not logged yet</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <span class="slot-cals" style="color:var(--muted);">— kcal</span>
+              <div class="slot-check" style="border-color:var(--border);"></div>
+            </div>
+          </div>
+
+          <!-- Mini stats row -->
+          <div class="mw-row" style="margin-top:.75rem;">
+            <div class="mw-card">
+              <div class="mw-label">Total Today</div>
+              <div class="mw-val" style="color:var(--brand);">1,100</div>
+              <div class="mw-sub">/ 2,000 kcal goal</div>
+              <div class="prog-bar" style="margin-top:.45rem;"><div class="prog-fill" style="width:55%;background:var(--brand);"></div></div>
+            </div>
+            <div class="mw-card">
+              <div class="mw-label">💧 Water</div>
+              <div class="mw-val" style="color:var(--cyan);">1,500</div>
+              <div class="mw-sub">/ 2,500 ml goal</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:60%;background:var(--cyan);"></div></div>
+            </div>
+            <div class="mw-card">
+              <div class="mw-label">Health</div>
+              <div class="mw-val" style="color:var(--green);font-size:1rem;padding-top:.1rem;">Good</div>
+              <div class="mw-sub" style="color:var(--green);">▲ 7-day avg</div>
+            </div>
+          </div>
+
+          <!-- Macro row -->
+          <div style="font-size:.7rem;color:var(--muted);margin:-.1rem 0 .35rem;">Macro Balance Today</div>
+          <div class="mw-row" style="gap:.4rem;">
+            <div class="mw-card" style="padding:.6rem .7rem;">
+              <div class="mw-label">Protein</div>
+              <div style="font-size:1rem;font-weight:700;color:#3b82f6;">88g</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:59%;background:#3b82f6;"></div></div>
+            </div>
+            <div class="mw-card" style="padding:.6rem .7rem;">
+              <div class="mw-label">Carbs</div>
+              <div style="font-size:1rem;font-weight:700;color:var(--brand);">145g</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:58%;background:var(--brand);"></div></div>
+            </div>
+            <div class="mw-card" style="padding:.6rem .7rem;">
+              <div class="mw-label">Fat</div>
+              <div style="font-size:1rem;font-weight:700;color:#f97316;">38g</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:58%;background:#f97316;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature list -->
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="feat-card">
+          <h3>🍽 4 Meal Slots</h3>
+          <p>Color-coded Breakfast, Lunch, Dinner, and Snack cards with live calorie totals and meal log summaries.</p>
+        </div>
+        <div class="feat-card">
+          <h3>📊 Health Indicator</h3>
+          <p>Analyzes 7-day and 30-day meal balance. Rates your habit: <span style="color:var(--green)">Great</span>, Good, Fair, Poor, or <span style="color:var(--red)">Critical</span>.</p>
+        </div>
+        <div class="feat-card">
+          <h3>💧 Water & Sweet Trackers</h3>
+          <p>Animated SVG progress rings. Quick-add buttons (250ml, 500ml). Separate tracking for water, sugary drinks, and alcohol.</p>
+        </div>
+        <div class="feat-card">
+          <h3>📈 Calorie Trend & Macro Charts</h3>
+          <p>Recharts line chart for daily calorie history with goal line overlay. Pie chart for protein / carbs / fat distribution.</p>
+        </div>
+        <div class="feat-card">
+          <h3>🗓 Meal Heatmap</h3>
+          <p>7-day or 30-day calendar showing meal-count intensity per day — instantly see logging consistency at a glance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 4 — Meal Log                                            -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-04" id="slide-4">
+    <div class="slide-tag">Page 2 — Meal Log</div>
+    <div class="slide-title">Log Meals in <span class="accent-green">Seconds</span></div>
+    <p class="slide-subtitle">Type a food name, select your portion, and auto-estimated nutrition is filled in instantly — no manual lookup required.</p>
+    <div class="divider" style="background:var(--green);"></div>
+
+    <div class="content-grid g2" style="max-width:1100px;align-items:start;">
+      <!-- Features -->
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="feat-card" style="border-color:rgba(34,197,94,.25);">
+          <h3 style="color:var(--green);">🔍 Smart Food Search</h3>
+          <p>Type any food name → real-time autocomplete dropdown from the built-in food database. No internet needed.</p>
+        </div>
+        <div class="feat-card">
+          <h3>⚖️ Portion Presets</h3>
+          <p>One click to set portion size: <strong>Small, Medium, Large, Extra Large</strong>. Nutrition scales automatically.</p>
+        </div>
+        <div class="feat-card">
+          <h3>🏠 Food-Source Tagging</h3>
+          <p>Label each meal: Home-Cooked · Fast-Food · Dine-Out · Street-Food · Processed. Tracked for health analytics.</p>
+        </div>
+        <div class="feat-card">
+          <h3>📅 Week View Navigation</h3>
+          <p>7-day mini calendar at the top. Navigate to any day; visual meal-count badges show how many meals were logged on each day.</p>
+        </div>
+        <div class="feat-card">
+          <h3>✏️ Manual Override</h3>
+          <p>Edit any auto-estimated value directly — calories, protein, carbs, fat, water. Full control when you need it.</p>
+        </div>
+      </div>
+
+      <!-- Mockup -->
+      <div class="mockup-wrap">
+        <div class="mockup-bar">
+          <div class="mb-dot" style="background:#ef4444;"></div>
+          <div class="mb-dot" style="background:var(--brand);"></div>
+          <div class="mb-dot" style="background:var(--green);"></div>
+          <div class="mockup-title">MealLog.tsx</div>
+        </div>
+        <div class="mockup-body">
+          <!-- Week nav -->
+          <div style="display:flex;gap:.35rem;margin-bottom:.85rem;">
+            <div style="flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .1rem;">
+              <div style="font-size:.62rem;color:var(--muted);">MON</div>
+              <div style="font-size:.85rem;font-weight:700;">10</div>
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--green);margin:.2rem auto 0;"></div>
+            </div>
+            <div style="flex:1;text-align:center;background:rgba(245,158,11,.12);border:1px solid var(--brand);border-radius:8px;padding:.4rem .1rem;">
+              <div style="font-size:.62rem;color:var(--brand);">TUE</div>
+              <div style="font-size:.85rem;font-weight:700;color:var(--brand);">11</div>
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--brand);margin:.2rem auto 0;"></div>
+            </div>
+            <div style="flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .1rem;">
+              <div style="font-size:.62rem;color:var(--muted);">WED</div>
+              <div style="font-size:.85rem;font-weight:700;">12</div>
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--border);margin:.2rem auto 0;"></div>
+            </div>
+            <div style="flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .1rem;">
+              <div style="font-size:.62rem;color:var(--muted);">THU</div>
+              <div style="font-size:.85rem;font-weight:700;">13</div>
+            </div>
+            <div style="flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .1rem;">
+              <div style="font-size:.62rem;color:var(--muted);">FRI</div>
+              <div style="font-size:.85rem;font-weight:700;">14</div>
+            </div>
+            <div style="flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .1rem;">
+              <div style="font-size:.62rem;color:var(--muted);">SAT</div>
+              <div style="font-size:.85rem;font-weight:700;">15</div>
+            </div>
+            <div style="flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .1rem;">
+              <div style="font-size:.62rem;color:var(--muted);">SUN</div>
+              <div style="font-size:.85rem;font-weight:700;">16</div>
+            </div>
+          </div>
+
+          <!-- Add meal form -->
+          <div style="background:var(--card);border:1px solid rgba(34,197,94,.25);border-radius:12px;padding:.85rem;margin-bottom:.75rem;">
+            <div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.08em;">Add Meal</div>
+            <div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.5rem .75rem;font-size:.8rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;">
+              <span>Chicken Breast, 200g…</span>
+              <span style="color:var(--muted);font-size:.7rem;">▼</span>
+            </div>
+            <div style="display:flex;gap:.4rem;margin-bottom:.5rem;">
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:.3rem .55rem;font-size:.72rem;">Small</div>
+              <div style="background:rgba(34,197,94,.15);border:1px solid var(--green);border-radius:7px;padding:.3rem .55rem;font-size:.72rem;color:var(--green);">Medium</div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:.3rem .55rem;font-size:.72rem;">Large</div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:.3rem .55rem;font-size:.72rem;">XL</div>
+            </div>
+            <!-- Auto estimated macros -->
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem;margin-bottom:.55rem;">
+              <div style="background:var(--card2);border-radius:7px;padding:.4rem;text-align:center;">
+                <div style="font-size:.62rem;color:var(--muted);">kcal</div>
+                <div style="font-weight:700;font-size:.88rem;color:var(--brand);">330</div>
+              </div>
+              <div style="background:var(--card2);border-radius:7px;padding:.4rem;text-align:center;">
+                <div style="font-size:.62rem;color:var(--muted);">protein</div>
+                <div style="font-weight:700;font-size:.88rem;color:#3b82f6;">62g</div>
+              </div>
+              <div style="background:var(--card2);border-radius:7px;padding:.4rem;text-align:center;">
+                <div style="font-size:.62rem;color:var(--muted);">carbs</div>
+                <div style="font-weight:700;font-size:.88rem;color:var(--brand);">0g</div>
+              </div>
+              <div style="background:var(--card2);border-radius:7px;padding:.4rem;text-align:center;">
+                <div style="font-size:.62rem;color:var(--muted);">fat</div>
+                <div style="font-weight:700;font-size:.88rem;color:#f97316;">7g</div>
+              </div>
+            </div>
+            <div style="background:var(--green);color:#000;font-weight:700;font-size:.78rem;border-radius:8px;padding:.45rem;text-align:center;">+ Log Meal · +15 XP</div>
+          </div>
+
+          <!-- Logged meals today  -->
+          <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;">Logged Today</div>
+          <div class="meal-slot">
+            <div class="meal-slot-left">
+              <span class="slot-icon">☀️</span>
+              <div><div class="slot-label">Oatmeal</div><div class="slot-foods">Breakfast · Home-Cooked</div></div>
+            </div>
+            <span class="slot-cals">310 kcal</span>
+          </div>
+          <div class="meal-slot">
+            <div class="meal-slot-left">
+              <span class="slot-icon">🌤</span>
+              <div><div class="slot-label">Chicken Rice</div><div class="slot-foods">Lunch · Dine-Out</div></div>
+            </div>
+            <span class="slot-cals">580 kcal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 5 — Food Hub                                            -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-05" id="slide-5">
+    <div class="slide-tag">Page 3 — Food Hub</div>
+    <div class="slide-title">Recipes · Pantry · <span class="accent-purple">Grocery</span></div>
+    <p class="slide-subtitle">A unified food operations center — create recipes, track pantry stock, and manage your shopping list with automatic syncing between all three.</p>
+    <div class="divider" style="background:var(--purple);"></div>
+
+    <div class="content-grid g2" style="max-width:1100px;align-items:start;">
+      <!-- Mockup -->
+      <div class="mockup-wrap">
+        <div class="mockup-bar">
+          <div class="mb-dot" style="background:#ef4444;"></div>
+          <div class="mb-dot" style="background:var(--brand);"></div>
+          <div class="mb-dot" style="background:var(--green);"></div>
+          <div class="mockup-title">FoodHub.tsx</div>
+        </div>
+        <div class="mockup-body">
+          <!-- Tabs -->
+          <div style="display:flex;gap:.4rem;margin-bottom:.85rem;">
+            <div style="flex:1;text-align:center;background:rgba(168,85,247,.15);border:1px solid var(--purple);border-radius:8px;padding:.4rem;font-size:.78rem;font-weight:600;color:var(--purple);">📖 Recipes</div>
+            <div style="flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem;font-size:.78rem;color:var(--muted);">📦 Pantry</div>
+            <div style="flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem;font-size:.78rem;color:var(--muted);">🛒 Grocery</div>
+          </div>
+
+          <!-- Recipe cards -->
+          <div style="display:flex;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap;">
+            <div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.35rem .7rem;font-size:.7rem;color:var(--muted);">All</div>
+            <div style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);border-radius:8px;padding:.35rem .7rem;font-size:.7rem;color:var(--brand);">★ Favorites</div>
+            <div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.35rem .7rem;font-size:.7rem;color:var(--muted);">⚡ Quick</div>
+          </div>
+
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.85rem;margin-bottom:.55rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem;">
+              <div>
+                <div style="font-weight:700;font-size:.88rem;">Chicken Stir-Fry</div>
+                <div style="font-size:.7rem;color:var(--muted);">Prep: 15min · Cook: 20min · 2 servings</div>
+              </div>
+              <span style="color:var(--brand);">★</span>
+            </div>
+            <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+              <div style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);border-radius:6px;padding:.2rem .5rem;font-size:.67rem;color:#3b82f6;">520 kcal</div>
+              <div style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:6px;padding:.2rem .5rem;font-size:.67rem;color:var(--green);">42g protein</div>
+              <div style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:6px;padding:.2rem .5rem;font-size:.67rem;color:var(--brand);">35g carbs</div>
+            </div>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.85rem;margin-bottom:.55rem;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem;">
+              <div>
+                <div style="font-weight:700;font-size:.88rem;">Avocado Toast</div>
+                <div style="font-size:.7rem;color:var(--muted);">Prep: 5min · Cook: 5min · 1 serving</div>
+              </div>
+              <span style="color:var(--muted);">☆</span>
+            </div>
+            <div style="display:flex;gap:.4rem;">
+              <div style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);border-radius:6px;padding:.2rem .5rem;font-size:.67rem;color:#3b82f6;">380 kcal</div>
+              <div style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:6px;padding:.2rem .5rem;font-size:.67rem;color:var(--green);">9g protein</div>
+            </div>
+          </div>
+
+          <!-- Pantry hint -->
+          <div style="background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:.6rem .85rem;display:flex;align-items:center;gap:.5rem;">
+            <span style="font-size:.85rem;">📦</span>
+            <div style="font-size:.72rem;color:var(--muted);">Cooking a recipe <strong style="color:var(--green);">auto-deducts</strong> matched pantry ingredients</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="feat-card" style="border-color:rgba(168,85,247,.25);">
+          <h3 style="color:var(--purple);">📖 Recipe Vault</h3>
+          <ul>
+            <li>Create recipes with name, ingredients, macros, prep/cook time</li>
+            <li>Filter by All / Favorites / Quick Recipes</li>
+            <li>Per-recipe: calories, protein, carbs, fat macro cards</li>
+            <li>Tag-based search and favorite toggle</li>
+          </ul>
+        </div>
+        <div class="feat-card">
+          <h3>📦 Pantry Manager</h3>
+          <ul>
+            <li>Inventory with quantity, unit, category, and expiry date</li>
+            <li>Low-stock alerts highlighted in yellow</li>
+            <li>± quantity adjustments and expiry warnings</li>
+            <li>Auto-syncs when grocery items are marked purchased</li>
+          </ul>
+        </div>
+        <div class="feat-card">
+          <h3>🛒 Grocery List</h3>
+          <ul>
+            <li>Add items with quantity, unit, store, price, and priority</li>
+            <li>Real-time total cost calculation</li>
+            <li>Toggle purchased → one-click syncs to Pantry</li>
+            <li>Clear all purchased items with one action</li>
+          </ul>
+        </div>
+        <div class="feat-card" style="border-color:rgba(34,197,94,.25);">
+          <h3 style="color:var(--green);">🔄 Auto-Deduction (Phase 3)</h3>
+          <p>Cooking a recipe now automatically deducts matched pantry ingredients by name — keeping inventory accurate without manual entry.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 6 — Nutrition Goals                                     -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-06" id="slide-6">
+    <div class="slide-tag">Page 4 — Nutrition Goals</div>
+    <div class="slide-title">Set Targets. Pick a <span class="accent-blue">Strategy</span>. Hit Goals.</div>
+    <p class="slide-subtitle">Five diet strategy presets auto-sync your macro targets. Watch real-time progress rings update as you log meals throughout the day.</p>
+    <div class="divider" style="background:var(--blue);"></div>
+
+    <div class="content-grid g2" style="max-width:1100px;align-items:start;">
+      <!-- Features -->
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="feat-card" style="border-color:rgba(59,130,246,.25);">
+          <h3 style="color:var(--blue);">⚡ Diet Strategy Presets</h3>
+          <div class="strategies" style="margin-top:.65rem;">
+            <div class="strat-btn"><span class="strat-icon">🎯</span>Balanced</div>
+            <div class="strat-btn active"><span class="strat-icon">💪</span>High Protein</div>
+            <div class="strat-btn"><span class="strat-icon">🥑</span>Keto</div>
+            <div class="strat-btn"><span class="strat-icon">🌱</span>Plant-Based</div>
+            <div class="strat-btn"><span class="strat-icon">⚡</span>Performance</div>
+          </div>
+          <p style="margin-top:.65rem;">Each preset applies recommended macros instantly. Active strategy grants an XP multiplier (up to +15%).</p>
+        </div>
+        <div class="feat-card">
+          <h3>🎯 Editable Targets</h3>
+          <ul>
+            <li>Set custom Calories, Protein (g), Carbs (g), Fat (g), Water (ml)</li>
+            <li>Defaults: 2000 kcal · 150g protein · 250g carbs · 65g fat · 2500ml</li>
+            <li>Values persist across sessions via Zustand persist</li>
+          </ul>
+        </div>
+        <div class="feat-card">
+          <h3>💍 Real-time Progress Rings</h3>
+          <p>Animated SVG rings per macro — update live as meals are logged. Shows current value, 7-day rolling average, and % met today.</p>
+        </div>
+        <div class="feat-card">
+          <h3>📊 7-Day Rolling Averages</h3>
+          <p>See how your past week trends against each goal. "<span style="color:var(--green)">Goals Met Today</span>" badge in top-right corner counts how many targets you've hit.</p>
+        </div>
+      </div>
+
+      <!-- Mockup -->
+      <div class="mockup-wrap">
+        <div class="mockup-bar">
+          <div class="mb-dot" style="background:#ef4444;"></div>
+          <div class="mb-dot" style="background:var(--brand);"></div>
+          <div class="mb-dot" style="background:var(--green);"></div>
+          <div class="mockup-title">NutritionGoals.tsx</div>
+        </div>
+        <div class="mockup-body">
+          <!-- Active strategy -->
+          <div style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.35);border-radius:12px;padding:.75rem;margin-bottom:.85rem;display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem;">Active Strategy</div>
+              <div style="font-weight:700;color:#3b82f6;">💪 High Protein</div>
+              <div style="font-size:.7rem;color:var(--muted);">1.1g protein per lb bodyweight</div>
+            </div>
+            <div class="xp-chip">+10% XP</div>
+          </div>
+
+          <!-- Progress rings as text indicators -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.75rem;">
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.65rem;">
+              <div style="font-size:.68rem;color:var(--muted);margin-bottom:.25rem;">🔥 Calories</div>
+              <div style="font-size:1rem;font-weight:700;color:var(--brand);">1,100 <span style="font-size:.7rem;color:var(--muted);">/ 2,000</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:55%;background:var(--brand);"></div></div>
+              <div style="font-size:.65rem;color:var(--muted);margin-top:.2rem;">7d avg: 1,850</div>
+            </div>
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.65rem;">
+              <div style="font-size:.68rem;color:var(--muted);margin-bottom:.25rem;">💪 Protein</div>
+              <div style="font-size:1rem;font-weight:700;color:#3b82f6;">88g <span style="font-size:.7rem;color:var(--muted);">/ 150g</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:59%;background:#3b82f6;"></div></div>
+              <div style="font-size:.65rem;color:var(--muted);margin-top:.2rem;">7d avg: 138g</div>
+            </div>
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.65rem;">
+              <div style="font-size:.68rem;color:var(--muted);margin-bottom:.25rem;">🍞 Carbs</div>
+              <div style="font-size:1rem;font-weight:700;color:var(--brand);">145g <span style="font-size:.7rem;color:var(--muted);">/ 250g</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:58%;background:var(--brand);"></div></div>
+              <div style="font-size:.65rem;color:var(--muted);margin-top:.2rem;">7d avg: 230g</div>
+            </div>
+            <div style="background:var(--card);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:.65rem;">
+              <div style="font-size:.68rem;color:var(--muted);margin-bottom:.25rem;">💧 Water</div>
+              <div style="font-size:1rem;font-weight:700;color:var(--cyan);">1,500ml <span style="font-size:.7rem;color:var(--muted);">/ 2,500</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:60%;background:var(--cyan);"></div></div>
+              <div style="font-size:.65rem;color:var(--muted);margin-top:.2rem;">7d avg: 2,100ml</div>
+            </div>
+          </div>
+
+          <!-- Goals met today -->
+          <div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:.6rem .85rem;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:.8rem;font-weight:600;">Goals Met Today</span>
+            <span style="font-weight:700;color:var(--green);font-size:1.05rem;">2 <span style="font-size:.7rem;color:var(--muted);">/ 5</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 7 — Gamification                                        -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-07" id="slide-7">
+    <div class="slide-tag">Gamification System</div>
+    <div class="slide-title">Eat Well. Earn <span class="accent">XP</span>. Level Up.</div>
+    <p class="slide-subtitle">Every meal logged, goal hit, and streak maintained earns you experience points. Complete daily missions, defeat weekly bosses, and unlock tier badges.</p>
+    <div class="divider"></div>
+
+    <div class="content-grid g2" style="max-width:1100px;align-items:start;">
+      <!-- Mockup: Missions + Boss -->
+      <div class="mockup-wrap">
+        <div class="mockup-bar">
+          <div class="mb-dot" style="background:#ef4444;"></div>
+          <div class="mb-dot" style="background:var(--brand);"></div>
+          <div class="mb-dot" style="background:var(--green);"></div>
+          <div class="mockup-title">FloatingMissions + WeeklyBossPanel</div>
+        </div>
+        <div class="mockup-body">
+          <!-- Player status -->
+          <div style="display:flex;align-items:center;gap:.85rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.75rem;margin-bottom:.75rem;">
+            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#f97316);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">🍴</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;">
+                <span style="font-weight:700;font-size:.9rem;">NutritionHero</span>
+                <span style="background:rgba(245,158,11,.2);color:var(--brand);border:1px solid rgba(245,158,11,.4);border-radius:6px;padding:.1rem .4rem;font-size:.68rem;font-weight:700;">Lv.12</span>
+              </div>
+              <div style="font-size:.7rem;color:var(--muted);margin-bottom:.3rem;">4,250 / 5,120 XP to next level</div>
+              <div class="prog-bar"><div class="prog-fill" style="width:83%;background:linear-gradient(90deg,var(--brand),#f97316);"></div></div>
+            </div>
+          </div>
+
+          <!-- Daily missions -->
+          <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;">Daily Missions <span style="color:var(--green);font-weight:700;">3/5</span></div>
+          <div class="mission-card">
+            <div><div class="mc-title">🌅 Breakfast Champion</div><div class="mc-desc">Log breakfast before 10 AM</div></div>
+            <div style="display:flex;align-items:center;gap:.4rem;">
+              <span class="xp-chip">+20 XP</span>
+              <div class="mc-check mc-done">✓</div>
+            </div>
+          </div>
+          <div class="mission-card">
+            <div><div class="mc-title">💧 Hydration Goal</div><div class="mc-desc">Drink 2,500ml water today</div></div>
+            <div style="display:flex;align-items:center;gap:.4rem;">
+              <span class="xp-chip">+30 XP</span>
+              <div class="mc-check mc-done">✓</div>
+            </div>
+          </div>
+          <div class="mission-card">
+            <div><div class="mc-title">🏠 Home Cook Hero</div><div class="mc-desc">Log 3 home-cooked meals</div></div>
+            <div style="display:flex;align-items:center;gap:.4rem;">
+              <span class="xp-chip">+35 XP</span>
+              <div class="mc-check" style="border-color:var(--border);"></div>
+            </div>
+          </div>
+
+          <!-- Weekly boss -->
+          <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:.75rem;margin-top:.65rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem;">
+              <div>
+                <div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">Weekly Boss</div>
+                <div style="font-weight:700;font-size:.9rem;margin-top:.1rem;">👹 The Sugar Demon</div>
+              </div>
+              <span style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#ef4444;border-radius:100px;padding:.2rem .6rem;font-size:.68rem;font-weight:700;">ACTIVE</span>
+            </div>
+            <div style="font-size:.7rem;color:var(--muted);margin-bottom:.4rem;">Defeat by limiting sugar intake this week</div>
+            <div class="boss-bar"><div class="boss-fill" style="width:33%;"></div></div>
+            <div style="font-size:.68rem;color:var(--muted);">1/3 conditions met · <span style="color:var(--brand);">150 XP reward</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features grid -->
+      <div style="display:flex;flex-direction:column;gap:.85rem;">
+        <div class="content-grid g2" style="margin:0;gap:.85rem;">
+          <div class="feat-card" style="border-color:rgba(245,158,11,.25);">
+            <div class="feat-icon" style="background:rgba(245,158,11,.15);">⚡</div>
+            <h3>XP System</h3>
+            <ul>
+              <li>+20 XP breakfast · +15 lunch · +15 dinner · +10 snack</li>
+              <li>+1.05–1.15x diet strategy multiplier</li>
+              <li>+5% per active streak (max +15%)</li>
+            </ul>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon" style="background:rgba(34,197,94,.15);">🎯</div>
+            <h3>Daily Missions</h3>
+            <ul>
+              <li>5 quests drawn from 25-quest pool daily</li>
+              <li>Adaptive difficulty — 5 tiers as level increases</li>
+              <li>Auto-completes on qualifying actions</li>
+            </ul>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon" style="background:rgba(239,68,68,.15);">⚔️</div>
+            <h3>Weekly Boss Battles</h3>
+            <ul>
+              <li>10 rotating bosses, 3 conditions each</li>
+              <li>Victor earns a large XP reward</li>
+              <li>New boss every Monday</li>
+            </ul>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon" style="background:rgba(249,115,22,.15);">🔥</div>
+            <h3>Streak System</h3>
+            <ul>
+              <li>3 streaks: Breakfast · Hydration · Home-Cooked</li>
+              <li>Milestone rewards at 3, 7, 14, 30 days</li>
+              <li>Longest-ever tracking per streak</li>
+            </ul>
+          </div>
+        </div>
+        <div class="feat-card">
+          <h3>🏆 Badge Gallery — 28 Badges · 4 Tiers</h3>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem;">
+            <span class="tier-pill tier-bronze">Bronze</span>
+            <span class="tier-pill tier-silver">Silver</span>
+            <span class="tier-pill tier-gold">Gold</span>
+            <span class="tier-pill tier-platinum">Platinum</span>
+          </div>
+          <p style="margin-top:.6rem;">Categories: Meals · Home-Cook · Recipes · Streaks · Levels · Quests · <span style="color:var(--cyan)">Smart Intelligence</span></p>
+          <p style="margin-top:.3rem;font-size:.78rem;color:var(--muted);">Badge unlocks trigger a full-screen spring-bounce popup with animated sparkle particles.</p>
+        </div>
+        <div class="feat-card">
+          <h3>🔔 Activity Notifications</h3>
+          <p>Color-coded floating toasts (max 5 stacked) for every meaningful action — meal log, XP gain, quest complete, streak milestone, boss victory, and more.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 8 — Smart Intelligence                                  -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-08" id="slide-8">
+    <div class="slide-tag">Phase 3 — Smart Intelligence</div>
+    <div class="slide-title">Your Personal <span class="accent-cyan">Nutrition AI</span></div>
+    <p class="slide-subtitle">Seven intelligent widgets analyze your data locally — no server, no ML API. Pure algorithmic intelligence powered by your own meal history.</p>
+    <div class="divider" style="background:var(--cyan);"></div>
+
+    <div class="content-grid g2" style="max-width:1100px;align-items:start;">
+      <!-- Bento mockup -->
+      <div class="mockup-wrap">
+        <div class="mockup-bar">
+          <div class="mb-dot" style="background:#ef4444;"></div>
+          <div class="mb-dot" style="background:var(--brand);"></div>
+          <div class="mb-dot" style="background:var(--green);"></div>
+          <div class="mockup-title">Smart Intelligence — Bento Grid Layout</div>
+        </div>
+        <div class="mockup-body">
+          <div class="bento">
+            <!-- Score card (1 col) -->
+            <div class="b-card b1" style="border-color:rgba(34,197,94,.3);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div class="b-title">Nutrition Score</div>
+              <div class="score-big" style="color:var(--green);">82</div>
+              <div class="score-grade">A</div>
+              <div style="font-size:.6rem;color:var(--muted);margin-top:.25rem;">7d avg: 78</div>
+            </div>
+            <!-- Insights (2 col) -->
+            <div class="b-card b2" style="border-color:rgba(245,158,11,.2);">
+              <div class="b-title">💡 Weekly Insights</div>
+              <div class="insight-item"><div class="i-dot" style="background:var(--green);"></div><div class="i-text">Protein intake up 15% this week — great progress!</div></div>
+              <div class="insight-item"><div class="i-dot" style="background:var(--brand);"></div><div class="i-text">Breakfast logged 6/7 days — consistency improving</div></div>
+              <div class="insight-item"><div class="i-dot" style="background:var(--red);"></div><div class="i-text">Water intake 20% below goal on weekends</div></div>
+              <div class="insight-item"><div class="i-dot" style="background:var(--cyan);"></div><div class="i-text">Home-cooked meals: 70% — healthy ratio!</div></div>
+            </div>
+            <!-- Habit Patterns (1 col) -->
+            <div class="b-card b1">
+              <div class="b-title">🧠 Habits</div>
+              <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.3rem;"><div class="i-dot" style="background:var(--green);"></div><div class="i-text">Morning routine</div></div>
+              <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.3rem;"><div class="i-dot" style="background:var(--green);"></div><div class="i-text">High protein</div></div>
+              <div style="display:flex;align-items:center;gap:.3rem;"><div class="i-dot" style="background:var(--red);"></div><div class="i-text">Late dinner</div></div>
+            </div>
+            <!-- Monthly Trend (3 col) -->
+            <div class="b-card b3" style="border-color:rgba(6,182,212,.2);">
+              <div class="b-title">📈 Monthly Nutrition Trend (12 months)</div>
+              <div style="height:52px;background:var(--card2);border-radius:8px;display:flex;align-items:flex-end;padding:.3rem .4rem;gap:3px;overflow:hidden;">
+                <div style="flex:1;background:rgba(6,182,212,.4);border-radius:2px 2px 0 0;height:45%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.45);border-radius:2px 2px 0 0;height:55%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.5);border-radius:2px 2px 0 0;height:50%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.55);border-radius:2px 2px 0 0;height:65%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.6);border-radius:2px 2px 0 0;height:60%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.65);border-radius:2px 2px 0 0;height:70%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.7);border-radius:2px 2px 0 0;height:68%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.75);border-radius:2px 2px 0 0;height:78%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.8);border-radius:2px 2px 0 0;height:75%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.85);border-radius:2px 2px 0 0;height:82%;"></div>
+                <div style="flex:1;background:rgba(6,182,212,.9);border-radius:2px 2px 0 0;height:85%;"></div>
+                <div style="flex:1;background:var(--cyan);border-radius:2px 2px 0 0;height:100%;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted);margin-top:.2rem;padding:0 .2rem;">
+                <span>Apr</span><span>Jun</span><span>Aug</span><span>Oct</span><span>Dec</span><span>Mar</span>
+              </div>
+            </div>
+            <!-- Grocery (1 col) -->
+            <div class="b-card b1">
+              <div class="b-title">🛒 Predicted</div>
+              <div style="font-size:.67rem;color:var(--muted);margin-bottom:.3rem;">Buy soon:</div>
+              <div style="font-size:.7rem;color:var(--text);">• Chicken · 92%</div>
+              <div style="font-size:.7rem;color:var(--text);">• Eggs · 87%</div>
+              <div style="font-size:.7rem;color:var(--text);">• Oats · 81%</div>
+            </div>
+            <!-- Meal Suggestions (4 col) -->
+            <div class="b-card b4" style="border-color:rgba(168,85,247,.2);">
+              <div class="b-title">🍽 Meal Suggestions</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin-top:.2rem;">
+                <div style="background:var(--card2);border-radius:8px;padding:.45rem .5rem;">
+                  <div style="font-size:.72rem;font-weight:600;">Grilled Salmon</div>
+                  <div style="font-size:.62rem;color:var(--purple);">Strategy match ★★★★★</div>
+                  <div style="font-size:.62rem;color:var(--muted);">420 kcal · 38g protein</div>
+                </div>
+                <div style="background:var(--card2);border-radius:8px;padding:.45rem .5rem;">
+                  <div style="font-size:.72rem;font-weight:600;">Greek Yogurt Bowl</div>
+                  <div style="font-size:.62rem;color:var(--purple);">Pantry match ★★★★☆</div>
+                  <div style="font-size:.62rem;color:var(--muted);">310 kcal · 28g protein</div>
+                </div>
+                <div style="background:var(--card2);border-radius:8px;padding:.45rem .5rem;">
+                  <div style="font-size:.72rem;font-weight:600;">Egg White Omelette</div>
+                  <div style="font-size:.62rem;color:var(--purple);">New variety ★★★☆☆</div>
+                  <div style="font-size:.62rem;color:var(--muted);">220 kcal · 30g protein</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature list -->
+      <div style="display:flex;flex-direction:column;gap:.85rem;">
+        <div class="feat-card" style="border-color:rgba(34,197,94,.25);">
+          <h3 style="color:var(--green);">🏆 Nutrition Score</h3>
+          <p>Daily 0–100 score with S–F grade. 5 weighted categories: Meal Consistency (25), Nutrition Balance (30), Hydration (20), Sugar Control (15), Home-Cooked (10).</p>
+        </div>
+        <div class="feat-card" style="border-color:rgba(245,158,11,.25);">
+          <h3>💡 Weekly Insights Engine</h3>
+          <p>Auto-detects patterns across 14+ days of data — protein trends, hydration dips, breakfast consistency, calorie streaks — with actionable tips for each.</p>
+        </div>
+        <div class="feat-card">
+          <h3>🧠 Habit Pattern Detection</h3>
+          <p>Identifies positive and negative eating habits. Green = positive, Red = negative, Yellow = neutral. Each habit shows impact rating.</p>
+        </div>
+        <div class="feat-card" style="border-color:rgba(168,85,247,.25);">
+          <h3 style="color:var(--purple);">🍽 Meal Suggestion Engine</h3>
+          <p>Scores recipes by diet strategy alignment, pantry ingredient availability, and meal diversity. Shows top suggestions with reasons.</p>
+        </div>
+        <div class="feat-card" style="border-color:rgba(6,182,212,.25);">
+          <h3 style="color:var(--cyan);">🛒 Predictive Grocery</h3>
+          <p>Forecasts what you'll need to buy based on past consumption frequency and current pantry stock. Shows confidence % per item.</p>
+        </div>
+        <div class="feat-card">
+          <h3>📈 Monthly Trend Chart</h3>
+          <p>12-month Recharts area chart of nutrition score and meal consistency. Gradient fill with hover tooltips.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 9 — Settings & Analytics                                -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-09" id="slide-9">
+    <div class="slide-tag">Settings · Analytics · Weekly Review</div>
+    <div class="slide-title">Track Progress. <span class="accent-purple">Control Everything.</span></div>
+    <p class="slide-subtitle">Deep analytics charts, weekly graded reviews, a full badge gallery, data backup/restore, and granular audio controls — all in one place.</p>
+    <div class="divider" style="background:var(--purple);"></div>
+
+    <div class="content-grid g3" style="max-width:1100px;align-items:start;">
+      <!-- Analytics mockup -->
+      <div class="feat-card" style="grid-column:span 2;">
+        <h3 style="margin-bottom:.85rem;">📊 Analytics & Weekly Review — Recharts Data Visualizations</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;">
+          <!-- Line chart placeholder -->
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.75rem;">
+            <div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem;">Calorie Trend — 30 Days</div>
+            <div style="height:70px;display:flex;align-items:flex-end;gap:2px;padding:.15rem;">
+              <div style="flex:1;height:55%;background:rgba(245,158,11,.35);border-radius:2px 2px 0 0;"></div>
+              <div style="flex:1;height:70%;background:rgba(245,158,11,.4);border-radius:2px 2px 0 0;"></div>
+              <div style="flex:1;height:60%;background:rgba(245,158,11,.45);border-radius:2px 2px 0 0;"></div>
+              <div style="flex:1;height:80%;background:rgba(245,158,11,.5);border-radius:2px 2px 0 0;"></div>
+              <div style="flex:1;height:65%;background:rgba(245,158,11,.45);border-radius:2px 2px 0 0;"></div>
+              <div style="flex:1;height:90%;background:rgba(245,158,11,.55);border-radius:2px 2px 0 0;"></div>
+              <div style="flex:1;height:75%;background:rgba(245,158,11,.5);border-radius:2px 2px 0 0;"></div>
+              <div style="flex:1;height:85%;background:rgba(245,158,11,.6);border-radius:2px 2px 0 0;"></div>
+              <div style="flex:1;height:80%;background:var(--brand);border-radius:2px 2px 0 0;"></div>
+            </div>
+            <div style="height:1px;background:rgba(245,158,11,.3);margin:.2rem 0;"></div>
+            <div style="font-size:.62rem;color:var(--muted);">Goal line at 2,000 kcal</div>
+          </div>
+          <!-- Weekly grade -->
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.75rem;">
+            <div style="font-size:.72rem;color:var(--muted);margin-bottom:.4rem;">Weekly Review — Mar 3–9</div>
+            <div style="display:flex;align-items:center;gap:.65rem;">
+              <div style="font-size:3rem;font-weight:800;color:var(--green);line-height:1;">B</div>
+              <div>
+                <div style="font-size:.72rem;color:var(--text);font-weight:600;">Good Week!</div>
+                <div style="font-size:.67rem;color:var(--muted);">Avg: 1,850 kcal · 6/7 days logged</div>
+                <div style="font-size:.67rem;color:var(--muted);">Protein avg: 138g · Quests: 22/35</div>
+              </div>
+            </div>
+          </div>
+          <!-- Streak tracker -->
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.75rem;">
+            <div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem;">🔥 Streaks</div>
+            <div style="display:flex;flex-direction:column;gap:.35rem;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:.75rem;">☀️ Breakfast</span>
+                <span style="font-weight:700;color:var(--brand);font-size:.82rem;">14 days</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:.75rem;">💧 Hydration</span>
+                <span style="font-weight:700;color:var(--cyan);font-size:.82rem;">7 days</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:.75rem;">🏠 Home-Cook</span>
+                <span style="font-weight:700;color:var(--green);font-size:.82rem;">5 days</span>
+              </div>
+            </div>
+          </div>
+          <!-- Badges preview -->
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.75rem;">
+            <div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem;">🏆 Recent Badges</div>
+            <div style="display:flex;flex-direction:column;gap:.3rem;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:.75rem;">🍴 Meal Master</span>
+                <span class="tier-pill tier-gold">Gold</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:.75rem;">🧠 Insight Seeker</span>
+                <span class="tier-pill tier-silver">Silver</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:.75rem;">🔬 Nutrition Analyst</span>
+                <span class="tier-pill tier-bronze">Bronze</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings features -->
+      <div style="display:flex;flex-direction:column;gap:.85rem;">
+        <div class="feat-card" style="border-color:rgba(168,85,247,.25);">
+          <div class="feat-icon" style="background:rgba(168,85,247,.15);">⚙️</div>
+          <h3>Settings Page</h3>
+          <ul>
+            <li>Sound toggles: master, effects, music</li>
+            <li>Volume sliders per channel (0–100%)</li>
+            <li>Animation on/off toggle</li>
+            <li>Editable username profile</li>
+          </ul>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(34,197,94,.15);">💾</div>
+          <h3>Data Management</h3>
+          <ul>
+            <li>Export entire app state as JSON backup</li>
+            <li>Import JSON to fully restore data</li>
+            <li>Reset all data with confirmation dialog</li>
+          </ul>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(245,158,11,.15);">📋</div>
+          <h3>What's New Changelog</h3>
+          <ul>
+            <li>v1.3 — Smart Intelligence (Mar 2026)</li>
+            <li>v1.2 — Full Experience Update</li>
+            <li>v1.1 — Gamification Update</li>
+            <li>v1.0 — Launch</li>
+          </ul>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(59,130,246,.15);">🏆</div>
+          <h3>Badge Gallery (28)</h3>
+          <p>Full gallery with tier styling, progress indicators, XP reward amounts, and unlock dates across 7 categories.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- SLIDE 10 — CTA / Download                                     -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="slide slide-10" id="slide-10">
+    <div class="glow-orb" style="width:600px;height:600px;bottom:-200px;left:50%;transform:translateX(-50%);background:rgba(245,158,11,.18);"></div>
+
+    <div class="slide-tag">v1.3.0 — Available Now</div>
+
+    <div class="slide-title">
+      Start Your<br><span class="accent">Quest Today</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="slide-subtitle">
+      MealQuest is free, open-source, and fully offline. No subscription, no account, no data leaving your device. Just you, your nutrition goals, and the adventure ahead.
+    </p>
+
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;margin-top:2rem;gap:.5rem;">
+      <a href="https://github.com/Rensjo/MealQuest" class="cta-btn" target="_blank">
+        ⭐ Star on GitHub
+      </a>
+      <a href="https://github.com/Rensjo/MealQuest/releases" class="cta-btn cta-btn-outline" target="_blank">
+        ↓ Download Release
+      </a>
+    </div>
+
+    <div class="platform-badges">
+      <div class="plat-badge">🪟 Windows <span style="color:var(--muted);font-weight:400;font-size:.75rem;">MSI + NSIS</span></div>
+      <div class="plat-badge">🍎 macOS <span style="color:var(--muted);font-weight:400;font-size:.75rem;">Universal DMG</span></div>
+      <div class="plat-badge">🐧 Linux <span style="color:var(--muted);font-weight:400;font-size:.75rem;">AppImage + DEB</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;max-width:800px;width:100%;margin:2rem auto 0;">
+      <div class="feat-card" style="text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:.5rem;">⚛️</div>
+        <h3>Frontend</h3>
+        <p>React 18.3 + TypeScript 5.5<br>Tailwind CSS 3.4<br>Framer Motion 11<br>Recharts 3.2</p>
+      </div>
+      <div class="feat-card" style="text-align:center;border-color:rgba(245,158,11,.25);">
+        <div style="font-size:1.75rem;margin-bottom:.5rem;">🦀</div>
+        <h3>Desktop Shell</h3>
+        <p>Tauri v2 (Rust)<br>Vite 5.4 build tool<br>GitHub Actions CI/CD<br>4 workflow pipelines</p>
+      </div>
+      <div class="feat-card" style="text-align:center;">
+        <div style="font-size:1.75rem;margin-bottom:.5rem;">💾</div>
+        <h3>Data & State</h3>
+        <p>Zustand 4.5 + persist<br>16 stores · localStorage<br>JSON export/import<br>0 external API calls</p>
+      </div>
+    </div>
+
+    <div style="margin-top:1.75rem;font-size:.8rem;color:var(--muted);text-align:center;">
+      Built by <strong style="color:var(--text);">Renkai Studios</strong> · Part of the <span style="color:var(--brand);">QuestlyKai Ecosystem</span> · MIT-adjacent License
+    </div>
+  </section>
+
+</div><!-- /slides -->
+
+<div class="footer-note">
+  <span>🍽 MealQuest v1.3.0</span>
+  <span>· Mar 2026</span>
+  <span>· Renkai Studios</span>
+  <span>· React + TypeScript + Tauri v2</span>
+  <span style="margin-left:auto;">Use ← → arrow keys or buttons to navigate</span>
+</div>
+
+<script>
+  let current = 0;
+  const TOTAL = 10;
+
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slideCounter');
+  const dotsContainer = document.getElementById('navDots');
+
+  // Build nav dots
+  for (let i = 0; i < TOTAL; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    btn.title = 'Slide ' + (i + 1);
+    btn.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(btn);
+  }
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = (n + TOTAL) % TOTAL;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    counter.textContent = (current + 1) + ' / ' + TOTAL;
+    slides[current].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function nextSlide() { goTo(current + 1); }
+  function prevSlide() { goTo(current - 1); }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft')                    { e.preventDefault(); prevSlide(); }
+  });
+
+  // Init first slide
+  goTo(0);
+</script>
+</body>
+</html>

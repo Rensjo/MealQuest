@@ -10,6 +10,7 @@ export interface FoodEstimate {
   carbs: number;
   fat: number;
   serving: string;
+  fromApi?: boolean;
 }
 
 /**
@@ -208,6 +209,85 @@ const FOOD_DB: FoodEstimate[] = [
   { name: 'beer', calories: 153, protein: 1.6, carbs: 13, fat: 0, serving: '12 oz' },
   { name: 'wine', calories: 125, protein: 0.1, carbs: 4, fat: 0, serving: '5 oz glass' },
   { name: 'tea', calories: 2, protein: 0, carbs: 0.5, fat: 0, serving: '1 cup' },
+
+  // ── Expanded Beverages (Frappes / Milk Tea / Iced) ──
+  { name: 'frappe', calories: 340, protein: 5, carbs: 52, fat: 11, serving: '16 oz' },
+  { name: 'frappuccino', calories: 350, protein: 5, carbs: 54, fat: 11, serving: '16 oz' },
+  { name: 'matcha frappe', calories: 350, protein: 6, carbs: 54, fat: 10, serving: '16 oz' },
+  { name: 'matcha frappuccino', calories: 350, protein: 6, carbs: 54, fat: 10, serving: '16 oz' },
+  { name: 'mocha frappe', calories: 380, protein: 6, carbs: 58, fat: 13, serving: '16 oz' },
+  { name: 'caramel frappe', calories: 410, protein: 5, carbs: 64, fat: 14, serving: '16 oz' },
+  { name: 'vanilla frappe', calories: 370, protein: 5, carbs: 56, fat: 12, serving: '16 oz' },
+  { name: 'coffee frappe', calories: 320, protein: 5, carbs: 50, fat: 10, serving: '16 oz' },
+  { name: 'java chip frappe', calories: 440, protein: 6, carbs: 66, fat: 16, serving: '16 oz' },
+  { name: 'matcha latte', calories: 240, protein: 10, carbs: 35, fat: 7, serving: '16 oz' },
+  { name: 'matcha', calories: 5, protein: 0.5, carbs: 1, fat: 0, serving: '1 tsp powder' },
+  { name: 'milk tea', calories: 260, protein: 2, carbs: 50, fat: 5, serving: '16 oz' },
+  { name: 'brown sugar milk tea', calories: 350, protein: 3, carbs: 68, fat: 6, serving: '16 oz' },
+  { name: 'taro milk tea', calories: 330, protein: 3, carbs: 62, fat: 7, serving: '16 oz' },
+  { name: 'wintermelon milk tea', calories: 250, protein: 3, carbs: 48, fat: 5, serving: '16 oz' },
+  { name: 'strawberry milk tea', calories: 300, protein: 3, carbs: 58, fat: 5, serving: '16 oz' },
+  { name: 'boba tea', calories: 300, protein: 3, carbs: 58, fat: 6, serving: '16 oz' },
+  { name: 'boba', calories: 300, protein: 3, carbs: 58, fat: 6, serving: '16 oz' },
+  { name: 'bubble tea', calories: 300, protein: 3, carbs: 58, fat: 6, serving: '16 oz' },
+  { name: 'dalgona coffee', calories: 180, protein: 4, carbs: 30, fat: 5, serving: '1 serving' },
+  { name: 'iced coffee', calories: 100, protein: 2, carbs: 18, fat: 3, serving: '16 oz' },
+  { name: 'iced latte', calories: 190, protein: 10, carbs: 20, fat: 7, serving: '16 oz' },
+  { name: 'iced americano', calories: 15, protein: 1, carbs: 2, fat: 0, serving: '16 oz' },
+  { name: 'cold brew', calories: 15, protein: 1, carbs: 2, fat: 0, serving: '12 oz' },
+  { name: 'americano', calories: 15, protein: 1, carbs: 2, fat: 0, serving: '12 oz' },
+  { name: 'calamansi juice', calories: 50, protein: 0, carbs: 13, fat: 0, serving: '1 cup' },
+  { name: 'mango juice', calories: 130, protein: 1, carbs: 32, fat: 0, serving: '1 cup' },
+  { name: 'coke', calories: 140, protein: 0, carbs: 39, fat: 0, serving: '12 oz can' },
+  { name: 'hot chocolate', calories: 190, protein: 7, carbs: 30, fat: 6, serving: '1 cup' },
+
+  // ── Filipino Street Food & Combos ──
+  { name: 'siomai', calories: 280, protein: 16, carbs: 20, fat: 14, serving: '6 pieces' },
+  { name: 'siomai rice', calories: 490, protein: 20, carbs: 66, fat: 14, serving: '1 plate' },
+  { name: 'siomai with rice', calories: 490, protein: 20, carbs: 66, fat: 14, serving: '1 plate' },
+  { name: 'kwek kwek', calories: 250, protein: 12, carbs: 20, fat: 14, serving: '3-4 pieces' },
+  { name: 'fish ball', calories: 200, protein: 8, carbs: 24, fat: 8, serving: '6 pieces' },
+  { name: 'squid ball', calories: 220, protein: 10, carbs: 22, fat: 10, serving: '6 pieces' },
+  { name: 'kikiam', calories: 230, protein: 10, carbs: 24, fat: 10, serving: '3 pieces' },
+  { name: 'isaw', calories: 200, protein: 14, carbs: 8, fat: 14, serving: '3 sticks' },
+  { name: 'betamax', calories: 220, protein: 16, carbs: 4, fat: 16, serving: '1 serving' },
+  { name: 'chicken inasal', calories: 280, protein: 36, carbs: 3, fat: 14, serving: '1 piece' },
+  { name: 'inasal', calories: 280, protein: 34, carbs: 4, fat: 14, serving: '1 piece' },
+  { name: 'pork barbecue', calories: 310, protein: 24, carbs: 14, fat: 18, serving: '2 sticks' },
+  { name: 'chicken barbecue', calories: 270, protein: 30, carbs: 10, fat: 14, serving: '2 sticks' },
+  { name: 'tokwat baboy', calories: 320, protein: 22, carbs: 8, fat: 22, serving: '1 serving' },
+
+  // ── Filipino Silog Meals ──
+  { name: 'tapsilog', calories: 640, protein: 38, carbs: 54, fat: 28, serving: '1 plate' },
+  { name: 'tocilog', calories: 620, protein: 28, carbs: 58, fat: 28, serving: '1 plate' },
+  { name: 'longsilog', calories: 680, protein: 28, carbs: 58, fat: 36, serving: '1 plate' },
+  { name: 'bangsilog', calories: 580, protein: 36, carbs: 54, fat: 24, serving: '1 plate' },
+  { name: 'hotsilog', calories: 560, protein: 22, carbs: 58, fat: 24, serving: '1 plate' },
+  { name: 'cornsilog', calories: 620, protein: 30, carbs: 56, fat: 28, serving: '1 plate' },
+  { name: 'chicksilog', calories: 700, protein: 40, carbs: 56, fat: 30, serving: '1 plate' },
+  { name: 'porksilog', calories: 660, protein: 30, carbs: 56, fat: 32, serving: '1 plate' },
+  { name: 'silog', calories: 580, protein: 28, carbs: 52, fat: 28, serving: '1 plate' },
+
+  // ── More Filipino Mains ──
+  { name: 'bicol express', calories: 380, protein: 18, carbs: 12, fat: 28, serving: '1 cup' },
+  { name: 'crispy pata', calories: 640, protein: 42, carbs: 10, fat: 50, serving: '1 serving' },
+  { name: 'tortang talong', calories: 220, protein: 14, carbs: 12, fat: 13, serving: '1 piece' },
+  { name: 'nilagang baka', calories: 320, protein: 28, carbs: 16, fat: 16, serving: '1 bowl' },
+  { name: 'giniling', calories: 360, protein: 26, carbs: 18, fat: 20, serving: '1 cup' },
+  { name: 'afritada', calories: 380, protein: 26, carbs: 22, fat: 22, serving: '1 cup' },
+  { name: 'palabok', calories: 430, protein: 18, carbs: 62, fat: 14, serving: '1 plate' },
+  { name: 'mami', calories: 380, protein: 18, carbs: 48, fat: 12, serving: '1 bowl' },
+  { name: 'lomi', calories: 480, protein: 22, carbs: 56, fat: 18, serving: '1 bowl' },
+  { name: 'lugaw', calories: 200, protein: 6, carbs: 38, fat: 3, serving: '1 bowl' },
+  { name: 'pandesal', calories: 150, protein: 5, carbs: 28, fat: 2, serving: '1 piece' },
+  { name: 'ensaymada', calories: 290, protein: 6, carbs: 38, fat: 13, serving: '1 piece' },
+  { name: 'ube pandesal', calories: 200, protein: 5, carbs: 35, fat: 4, serving: '1 piece' },
+  { name: 'chicken rice', calories: 420, protein: 30, carbs: 46, fat: 10, serving: '1 plate' },
+  { name: 'pork rice', calories: 450, protein: 24, carbs: 48, fat: 16, serving: '1 plate' },
+  { name: 'beef rice', calories: 460, protein: 26, carbs: 48, fat: 16, serving: '1 plate' },
+  { name: 'garlic rice', calories: 260, protein: 5, carbs: 46, fat: 7, serving: '1 cup' },
+  { name: 'chickenjoy', calories: 450, protein: 30, carbs: 20, fat: 28, serving: '1 piece' },
+  { name: 'burger steak', calories: 530, protein: 28, carbs: 42, fat: 28, serving: '1 serving' },
 ];
 
 /** Sweet/dessert category keywords */
@@ -228,50 +308,65 @@ const SWEET_KEYWORDS = [
   'kutsinta', 'binignit', 'ginataan', 'yema', 'silvanas',
 ];
 
-/** Portion multipliers */
-const PORTION_MAP: Record<string, number> = {
+/** Portion multipliers — exported so API service and QuickMealLog can share them */
+export const PORTION_MAP: Record<string, number> = {
   small: 0.7,
   medium: 1.0,
   large: 1.4,
   'extra large': 1.8,
+  'extra-large': 1.8,
+  xl: 1.8,
   half: 0.5,
   double: 2.0,
 };
 
 /**
  * Search the food database for a food name.
- * Returns the closest match or null.
+ * Returns the most specific (longest) match or null.
+ *
+ * Fixes:
+ *  - "siomai rice" now returns "siomai rice" (longest phrase match) not just "rice"
+ *  - "matcha frappe" no longer matches "tokwa AT baboy" via substring-within-word
  */
 export function lookupFood(query: string): FoodEstimate | null {
   const q = query.toLowerCase().trim();
   if (!q) return null;
 
-  // Exact match
+  // 1. Exact match
   const exact = FOOD_DB.find((f) => f.name === q);
   if (exact) return exact;
 
-  // Contains match
-  const contains = FOOD_DB.find((f) => q.includes(f.name) || f.name.includes(q));
-  if (contains) return contains;
+  // 2. Phrase containment — LONGEST match wins.
+  //    e.g. "siomai rice" contains both "rice" (len 4) and "siomai rice" (len 11);
+  //    we want "siomai rice", not the first hit.
+  const phraseMatches = FOOD_DB.filter((f) => q.includes(f.name) || f.name.includes(q));
+  if (phraseMatches.length > 0) {
+    return phraseMatches.reduce((best, cur) =>
+      cur.name.length > best.name.length ? cur : best
+    );
+  }
 
-  // Word overlap scoring
-  const queryWords = q.split(/\s+/);
+  // 3. Exact whole-word overlap scoring.
+  //    "matcha".includes("at") is true but "at" !== "matcha", so we use strict
+  //    equality to avoid false positives like matcha → tokwa AT baboy.
+  const queryWords = q.split(/\s+/).filter((w) => w.length >= 2);
+  if (queryWords.length === 0) return null;
+
   let best: FoodEstimate | null = null;
   let bestScore = 0;
 
   for (const food of FOOD_DB) {
-    const foodWords = food.name.split(/\s+/);
-    const overlap = queryWords.filter((w) =>
-      foodWords.some((fw) => fw.includes(w) || w.includes(fw))
-    ).length;
-    const score = overlap / Math.max(queryWords.length, foodWords.length);
-    if (score > bestScore && score >= 0.3) {
+    const foodWords = food.name.split(/\s+/).filter((w) => w.length >= 2);
+    const matched = queryWords.filter((qw) => foodWords.includes(qw)).length;
+    if (matched === 0) continue;
+    const score = matched / Math.max(queryWords.length, foodWords.length);
+    if (score > bestScore) {
       bestScore = score;
       best = food;
     }
   }
 
-  return best;
+  return bestScore >= 0.3 ? best : null;
 }
 
 /**
@@ -308,14 +403,41 @@ export function isSweet(foodName: string): boolean {
 
 /**
  * Get food suggestions based on a partial query (for autocomplete).
+ * Results are sorted by relevance: exact → starts-with → contains → word-match.
  */
 export function suggestFoods(query: string, limit: number = 8): FoodEstimate[] {
   const q = query.toLowerCase().trim();
   if (!q) return [];
 
-  return FOOD_DB
-    .filter((f) => f.name.includes(q))
-    .slice(0, limit);
+  const qWords = q.split(/\s+/).filter((w) => w.length >= 3);
+
+  const scored = FOOD_DB.map((food) => {
+    let score = 0;
+    if (food.name === q) score = 100;
+    else if (food.name.startsWith(q)) score = 80;
+    else if (food.name.includes(q)) score = 60;
+    else if (qWords.length > 0 && qWords.some((w) => food.name.includes(w))) score = 40;
+    return { food, score };
+  }).filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  return scored.slice(0, limit).map(({ food }) => food);
+}
+
+/**
+ * Apply a portion multiplier to an existing FoodEstimate (e.g. from API).
+ * Used when the estimate was not computed via estimateNutrition.
+ */
+export function applyPortion(estimate: FoodEstimate, portion: string): FoodEstimate {
+  const multiplier = PORTION_MAP[portion.toLowerCase().trim()] ?? 1.0;
+  return {
+    ...estimate,
+    calories: Math.round(estimate.calories * multiplier),
+    protein: Math.round(estimate.protein * multiplier * 10) / 10,
+    carbs: Math.round(estimate.carbs * multiplier * 10) / 10,
+    fat: Math.round(estimate.fat * multiplier * 10) / 10,
+    serving: `${portion} (est. ${estimate.serving})`,
+  };
 }
 
 /**

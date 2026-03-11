@@ -15,11 +15,13 @@ import {
   Beef,
   Wheat,
   Droplets,
+  Loader2,
 } from 'lucide-react';
 import { cn, isLiquidLog } from '@/utils';
 import { useMealLogStore } from '@/stores/mealLogStore';
 import { useNutritionTracker } from '@/hooks';
-import { suggestFoods, estimateNutrition } from '@/utils/foodDatabase';
+import { suggestFoods, estimateNutrition, applyPortion } from '@/utils/foodDatabase';
+import { searchFoodOnline } from '@/services/foodApiService';
 import { todayISO } from '@/utils/date';
 import type { MealType, FoodSource } from '@/types';
 import { MEAL_TYPES, FOOD_SOURCES } from '@/types';
@@ -76,9 +78,11 @@ export function QuickMealLog({ className }: { className?: string } = {}) {
   const [estimated, setEstimated] = useState<FoodEstimate | null>(null);
   const [isLogging, setIsLogging] = useState(false);
   const [loggedFeedback, setLoggedFeedback] = useState(false);
+  const [isLoadingApi, setIsLoadingApi] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const apiAbortRef = useRef<AbortController | null>(null);
 
   // Auto-set meal type based on time of day
   useEffect(() => {
@@ -89,18 +93,58 @@ export function QuickMealLog({ className }: { className?: string } = {}) {
     else setMealType('snack');
   }, []);
 
-  // Update suggestions as user types
+  // Update suggestions as user types.
+  // Local DB is checked instantly; if fewer than 3 results and query >= 3 chars,
+  // USDA FoodData Central is queried after a 450 ms debounce.
   useEffect(() => {
-    if (foodName.length >= 2) {
-      const results = suggestFoods(foodName, 6);
-      setSuggestions(results);
-      setShowSuggestions(results.length > 0);
-    } else {
+    setEstimated(null);
+
+    if (foodName.length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
+      setIsLoadingApi(false);
+      return;
     }
-    // Clear estimate when food name changes
-    setEstimated(null);
+
+    const local = suggestFoods(foodName, 6);
+    setSuggestions(local);
+    setShowSuggestions(local.length > 0);
+
+    if (local.length >= 3 || foodName.length < 3) {
+      setIsLoadingApi(false);
+      return;
+    }
+
+    // Trigger online search for obscure / non-Filipino foods
+    setIsLoadingApi(true);
+    let cancelled = false;
+    const controller = new AbortController();
+    apiAbortRef.current = controller;
+
+    const timer = setTimeout(async () => {
+      try {
+        const apiResults = await searchFoodOnline(foodName, controller.signal);
+        if (!cancelled) {
+          const localNames = new Set(local.map((f) => f.name));
+          const merged = [
+            ...local,
+            ...apiResults.filter((r) => !localNames.has(r.name)),
+          ];
+          setSuggestions(merged.slice(0, 8));
+          setShowSuggestions(merged.length > 0);
+          setIsLoadingApi(false);
+        }
+      } catch {
+        if (!cancelled) setIsLoadingApi(false);
+      }
+    }, 450);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      controller.abort();
+      setIsLoadingApi(false);
+    };
   }, [foodName]);
 
   // Re-estimate when portion changes (if food was already set)
@@ -130,7 +174,10 @@ export function QuickMealLog({ className }: { className?: string } = {}) {
     (food: FoodEstimate) => {
       setFoodName(food.name);
       setShowSuggestions(false);
-      const est = estimateNutrition(food.name, portion);
+      setIsLoadingApi(false);
+      // For API results, estimateNutrition returns null (not in local DB);
+      // fall back to the suggestion's own nutrition scaled for the current portion.
+      const est = estimateNutrition(food.name, portion) ?? applyPortion(food, portion);
       setEstimated(est);
       inputRef.current?.focus();
     },
@@ -241,7 +288,7 @@ export function QuickMealLog({ className }: { className?: string } = {}) {
 
           {/* Autocomplete Dropdown */}
           <AnimatePresence>
-            {showSuggestions && (
+            {(showSuggestions || (isLoadingApi && foodName.length >= 3)) && (
               <motion.div
                 ref={dropdownRef}
                 initial={{ opacity: 0, y: -4, scale: 0.98 }}
@@ -259,12 +306,25 @@ export function QuickMealLog({ className }: { className?: string } = {}) {
                     }}
                     className="flex w-full items-center justify-between px-3.5 py-2.5 text-sm hover:bg-brand/10 transition-colors duration-100 group"
                   >
-                    <span className="capitalize text-amber-100/80 group-hover:text-white transition-colors">{food.name}</span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="capitalize text-amber-100/80 group-hover:text-white transition-colors">{food.name}</span>
+                      {food.fromApi && (
+                        <span className="text-[9px] rounded px-1 py-0.5 bg-blue-500/12 text-blue-400/70 border border-blue-500/20 leading-none">
+                          online
+                        </span>
+                      )}
+                    </span>
                     <span className="text-xs text-amber-200/40 group-hover:text-amber-200/60 transition-colors">
                       {food.calories} kcal · {food.serving}
                     </span>
                   </button>
                 ))}
+                {isLoadingApi && suggestions.length === 0 && (
+                  <div className="flex items-center gap-2 px-3.5 py-2.5 text-xs text-amber-200/40">
+                    <Loader2 size={12} className="animate-spin" />
+                    Searching food database…
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

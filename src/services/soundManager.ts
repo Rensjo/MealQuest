@@ -24,7 +24,7 @@ const SFX_FILES: Record<SfxName, string> = {
   'level-up':      '/level-up-sound.mp3',
 };
 
-const MUSIC_FILE = '/Lonely-by-purrple-cat-background-music.mp3';
+const MUSIC_FILE = '/Lonely-by-purrple-cat-background-music.MP3';
 
 // ---------------------------------------------------------------------------
 // SoundManager class

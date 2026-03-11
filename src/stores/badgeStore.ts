@@ -59,6 +59,12 @@ const BADGE_DEFINITIONS: BadgeDef[] = [
   { id: 'quest-silver',    name: 'Daily Hero',         description: 'Complete 25 daily missions',           icon: '🗡️', tier: 'silver',   category: 'quests',    xpReward: 50,  requirement: 25  },
   { id: 'quest-gold',      name: 'Quest Champion',     description: 'Complete 75 daily missions',           icon: '🏅', tier: 'gold',     category: 'quests',    xpReward: 100, requirement: 75  },
   { id: 'quest-platinum',  name: 'Quest Overlord',     description: 'Complete 200 daily missions',          icon: '🎖️', tier: 'platinum', category: 'quests',    xpReward: 200, requirement: 200 },
+
+  // ── Phase 3: Smart Achievements ────────────────────────────────────────
+  { id: 'smart-bronze',    name: 'Data Starter',       description: 'Reach a daily nutrition score of 60+', icon: '📊', tier: 'bronze',   category: 'smart',     xpReward: 25,  requirement: 1   },
+  { id: 'smart-silver',    name: 'Insight Seeker',     description: 'Achieve 7-day hydration streak',       icon: '🔍', tier: 'silver',   category: 'smart',     xpReward: 50,  requirement: 7   },
+  { id: 'smart-gold',      name: 'Nutrition Analyst',  description: 'Maintain 80+ daily score for 14 days', icon: '🧪', tier: 'gold',     category: 'smart',     xpReward: 100, requirement: 14  },
+  { id: 'smart-platinum',  name: 'AI Master Chef',     description: 'Log 100 meals with auto-estimation',   icon: '🤖', tier: 'platinum', category: 'smart',     xpReward: 200, requirement: 100 },
 ];
 
 function buildInitialBadges(): Badge[] {
@@ -75,6 +81,7 @@ interface BadgeState {
   lifetimeHomeCooked: number;
   lifetimeRecipes: number;
   lifetimeQuests: number;
+  lifetimeSmartActions: number; // Phase 3: auto-estimation uses, high scores, etc.
 }
 
 interface BadgeActions {
@@ -86,6 +93,8 @@ interface BadgeActions {
   incrementRecipes: () => Badge[];
   /** Call when a quest/mission is completed */
   incrementQuests: () => Badge[];
+  /** Phase 3: Call when a smart action occurs (auto-estimation, high score, etc.) */
+  incrementSmartActions: () => Badge[];
   reset: () => void;
 }
 
@@ -95,6 +104,7 @@ const initialState: BadgeState = {
   lifetimeHomeCooked: 0,
   lifetimeRecipes: 0,
   lifetimeQuests: 0,
+  lifetimeSmartActions: 0,
 };
 
 // ---------------------------------------------------------------------------
@@ -120,6 +130,7 @@ export const useBadgeStore = create<BadgeState & BadgeActions>()(
             case 'quests':    return state.lifetimeQuests;
             case 'streak':    return longestStreak;
             case 'level':     return level;
+            case 'smart':     return state.lifetimeSmartActions;
           }
         };
 
@@ -161,6 +172,11 @@ export const useBadgeStore = create<BadgeState & BadgeActions>()(
 
       incrementQuests: () => {
         set(state => ({ lifetimeQuests: state.lifetimeQuests + 1 }));
+        return get().checkAndAwardBadges();
+      },
+
+      incrementSmartActions: () => {
+        set(state => ({ lifetimeSmartActions: state.lifetimeSmartActions + 1 }));
         return get().checkAndAwardBadges();
       },
 

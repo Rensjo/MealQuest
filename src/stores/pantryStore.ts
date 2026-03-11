@@ -6,7 +6,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { nanoid } from 'nanoid';
-import type { GroceryItem, PantryItem } from '@/types';
+import type { GroceryItem, PantryItem, RecipeIngredient } from '@/types';
 import { todayISO } from '@/utils/date';
 import { useXPStore } from './xpStore';
 import { useQuestStore } from './questStore';
@@ -21,6 +21,7 @@ interface PantryActions {
   updateItem: (id: string, updates: Partial<PantryItem>) => void;
   deleteItem: (id: string) => void;
   consumeItem: (id: string, quantity: number) => void;
+  consumeRecipeIngredients: (ingredients: RecipeIngredient[]) => { matched: number; total: number };
   restockItem: (id: string, quantity: number) => void;
   setQuantity: (id: string, quantity: number) => void;
   upsertFromGrocery: (item: Pick<GroceryItem, 'name' | 'quantity' | 'unit' | 'category'>) => PantryItem;
@@ -111,6 +112,22 @@ export const usePantryStore = create<PantryState & PantryActions>()(
               : item
           ),
         })),
+
+      consumeRecipeIngredients: (ingredients) => {
+        let matched = 0;
+        const items = get().items;
+        for (const ing of ingredients) {
+          const norm = ing.name.trim().toLowerCase();
+          const match = items.find(
+            (p) => p.name.trim().toLowerCase() === norm || p.name.trim().toLowerCase().includes(norm) || norm.includes(p.name.trim().toLowerCase()),
+          );
+          if (match && match.quantity > 0) {
+            get().consumeItem(match.id, ing.quantity);
+            matched++;
+          }
+        }
+        return { matched, total: ingredients.length };
+      },
 
       restockItem: (id, quantity) =>
         set((state) => ({

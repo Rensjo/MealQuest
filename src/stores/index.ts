@@ -15,3 +15,4 @@ export { useSettingsStore } from './settingsStore';
 export { useGroceryStore } from './groceryStore';
 export { useBadgeStore } from './badgeStore';
 export { useSoundStore } from './soundStore';
+export { useIntelligenceStore } from './intelligenceStore';

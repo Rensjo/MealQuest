@@ -23,6 +23,9 @@ interface QuestState {
   groceryQuests: GroceryQuest[];
   lastMissionRefresh: string;
   lastBossRefresh: string;
+  // Phase 3: adaptive difficulty
+  adaptiveDifficulty: number; // 1-5, rises as user completes more consistently
+  completionStreak: number;   // consecutive days with all missions completed
 }
 
 interface QuestActions {
@@ -36,6 +39,8 @@ interface QuestActions {
   completeGroceryQuest: (id: string) => number;
   getActiveMissions: () => Mission[];
   getCompletedMissions: () => Mission[];
+  /** Phase 3: update adaptive difficulty based on completion patterns */
+  updateAdaptiveDifficulty: () => void;
   reset: () => void;
 }
 
@@ -216,6 +221,8 @@ const initialState: QuestState = {
   groceryQuests: [],
   lastMissionRefresh: '',
   lastBossRefresh: '',
+  adaptiveDifficulty: 1,
+  completionStreak: 0,
 };
 
 export const useQuestStore = create<QuestState & QuestActions>()(
@@ -229,19 +236,30 @@ export const useQuestStore = create<QuestState & QuestActions>()(
         const today = date ?? todayISO();
         if (get().lastMissionRefresh === today) return;
 
-        const selected = pickDailyQuests(today, 5);
+        // Phase 3: check if all missions were completed yesterday → streak
+        const prevMissions = get().dailyMissions;
+        const allCompleted = prevMissions.length > 0 && prevMissions.every(m => m.completed);
+        const newStreak = allCompleted ? get().completionStreak + 1 : 0;
+
+        // Adaptive difficulty scales XP: difficulty level adds 10% per tier
+        const difficulty = get().adaptiveDifficulty;
+        const xpMultiplier = 1 + (difficulty - 1) * 0.1;
+        // Higher difficulty also selects harder quests (more from end of pool)
+        const questCount = Math.min(5 + Math.floor(difficulty / 3), 7);
+
+        const selected = pickDailyQuests(today, questCount);
         const missions: Mission[] = selected.map((t) => ({
           id: nanoid(),
           title: t.title,
-          description: t.description,
-          xpReward: t.xpReward,
+          description: difficulty >= 3 ? `${t.description} (Tier ${difficulty})` : t.description,
+          xpReward: Math.round(t.xpReward * xpMultiplier),
           completed: false,
           category: t.category,
           triggerType: t.triggerType,
           date: today,
         }));
 
-        set({ dailyMissions: missions, lastMissionRefresh: today });
+        set({ dailyMissions: missions, lastMissionRefresh: today, completionStreak: newStreak });
       },
 
       completeMission: (id) => {
@@ -375,6 +393,20 @@ export const useQuestStore = create<QuestState & QuestActions>()(
 
       getActiveMissions: () => get().dailyMissions.filter((m) => !m.completed),
       getCompletedMissions: () => get().dailyMissions.filter((m) => m.completed),
+
+      updateAdaptiveDifficulty: () => {
+        const streak = get().completionStreak;
+        // Difficulty rises with streak: 3-day streak → tier 2, 7-day → tier 3, etc.
+        let newDifficulty = 1;
+        if (streak >= 21) newDifficulty = 5;
+        else if (streak >= 14) newDifficulty = 4;
+        else if (streak >= 7) newDifficulty = 3;
+        else if (streak >= 3) newDifficulty = 2;
+
+        if (newDifficulty !== get().adaptiveDifficulty) {
+          set({ adaptiveDifficulty: newDifficulty });
+        }
+      },
 
       reset: () => set(initialState),
     }),

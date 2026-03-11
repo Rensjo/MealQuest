@@ -65,7 +65,7 @@ MealQuest/
 │   │   ├── RecipeVaultPanel.tsx      # Slide-in recipe vault panel
 │   │   ├── Navigation.tsx            # Page navigation
 │   │   ├── navigation/              # Navigation components (FloatingNav)
-│   │   ├── dashboard/               # Dashboard widgets (heatmap, charts, trackers)
+│   │   ├── dashboard/               # Dashboard widgets (heatmap, charts, trackers, SmartWidgets)
 │   │   ├── gaming/                  # Gamification components
 │   │   │   ├── FloatingMissions.tsx      # Daily missions panel
 │   │   │   ├── WeeklyBossPanel.tsx       # Weekly boss battle UI
@@ -88,7 +88,7 @@ MealQuest/
 │   │   ├── NutritionAnalytics.tsx    # Analytics charts (embedded)
 │   │   └── index.ts                  # Page exports
 │   │
-│   ├── stores/                   # Zustand state management (15 stores)
+│   ├── stores/                   # Zustand state management (16 stores)
 │   │   ├── mealLogStore.ts           # Meal logging state
 │   │   ├── nutritionStore.ts         # Nutrition targets & tracking
 │   │   ├── groceryStore.ts           # Grocery list management
@@ -103,10 +103,17 @@ MealQuest/
 │   │   ├── settingsStore.ts          # User preferences
 │   │   ├── soundStore.ts             # Audio settings
 │   │   ├── notificationStore.ts      # Activity notifications
+│   │   ├── intelligenceStore.ts      # Smart Intelligence state (Phase 3)
 │   │   └── index.ts                  # Store exports
 │   │
 │   ├── services/                 # Service layer
-│   │   └── soundManager.ts          # Audio playback, preloading, volume control
+│   │   ├── soundManager.ts          # Audio playback, preloading, volume control
+│   │   ├── nutritionScore.ts        # Daily nutrition score (0–100) calculation
+│   │   ├── insightEngine.ts         # Weekly insight detection engine
+│   │   ├── habitDetector.ts         # Positive/negative habit pattern analysis
+│   │   ├── mealSuggestionEngine.ts  # Personalized meal recommendation scoring
+│   │   ├── groceryPredictor.ts      # Predictive grocery forecasting
+│   │   └── notificationScheduler.ts # Context-aware smart notification rules
 │   │
 │   ├── hooks/                    # Custom React hooks
 │   │   ├── useDailyRefresh.ts        # Daily mission/boss/quest refresh
@@ -158,6 +165,7 @@ MealQuest/
 - Meal heatmap calendar (7-day / 30-day)
 - Calorie trend line chart and macro balance pie chart
 - Pantry and grocery quick-access widgets
+- **Smart Intelligence section** (bento-grid layout): Nutrition Score, Insights, Habit Patterns, Monthly Trends, Grocery Predictions, and Meal Suggestions — all in uniform-height CSS Grid rows
 
 ### Nutrition Goals
 - Editable daily targets for calories, protein, carbs, fat, and water
@@ -176,11 +184,21 @@ MealQuest/
 - **Leveling**: Progressive curve (100 × 1.5^(level-1) XP per level)
 - **Diet strategy multipliers**: 1.05x–1.15x XP based on selected strategy
 - **Streak bonus**: Up to +15% XP (5% per active streak)
-- **Daily missions**: 5 quests drawn from a 25-quest pool, refreshed daily
+- **Daily missions**: 5 quests drawn from a 25-quest pool, refreshed daily, with **adaptive difficulty** scaling up to 5 tiers as the player levels up
 - **Weekly boss battles**: 10 rotating bosses with 3 challenge conditions each
-- **Badges**: 24 badges across 6 categories (meals, recipes, streaks, quests, levels, home-cook) with Bronze/Silver/Gold/Platinum tiers
+- **Badges**: 28 badges across 6 categories (meals, recipes, streaks, quests, levels, home-cook, + 4 Smart Intelligence badges) with Bronze/Silver/Gold/Platinum tiers
 - **Streaks**: Breakfast, hydration, and home-cooked streaks with milestone XP rewards
 - **Level-up celebrations** and **badge unlock popups** with animations
+
+### Smart Intelligence (Phase 3)
+- **Nutrition Score**: Daily 0–100 score with S–F letter grade across 5 weighted categories (goal completion, meal timing, macro balance, variety, hydration)
+- **Weekly Insights**: Auto-detected patterns — meal consistency, protein trends, missed targets, calorie streaks — with actionable tips
+- **Habit Pattern Detection**: Identifies positive and negative eating habits from historical data
+- **Meal Suggestion Engine**: Personalized recommendations scored by diet strategy alignment, pantry availability, and past meal diversity
+- **Predictive Grocery System**: Forecasts what ingredients to buy based on consumption frequency and current pantry stock
+- **Smart Notifications**: Context-aware reminders — meal time alerts, hydration nudges, streak risk warnings, positive reinforcement
+- **Monthly Trend Charts**: 12-month area chart of nutrition score and meal consistency via Recharts
+- **Pantry Auto-Deduction**: Cooking a recipe automatically deducts matched pantry ingredients
 
 ### UI & Panels
 - **Floating Action Dock**: Quick buttons for Quests, Recipe Vault, Weekly Boss
@@ -272,10 +290,24 @@ All data is stored locally in the browser's `localStorage` via Zustand persist m
 | `mealquest-badges` | Badge progress |
 | `mealquest-settings` | User preferences |
 | `mealquest-sound` | Audio settings |
+| `mealquest-intelligence` | Smart Intelligence state (scores, insights, habits, suggestions, predictions) |
 
 ---
 
 ## 9. Version History
+
+### v1.3 — Smart Intelligence Update (Mar 2026)
+- Smart Nutrition Score: daily 0–100 score with S–F grade and 5-category breakdown
+- Weekly Insights engine: auto-detects meal consistency, protein trends, and missed targets with tips
+- Habit Pattern Detection: identifies positive and negative eating habits from historical logs
+- Meal Suggestion Engine: personalized recommendations scored by diet strategy and pantry stock
+- Predictive Grocery System: forecasts ingredients to buy based on consumption frequency
+- Smart Notifications: context-aware meal reminders, hydration alerts, and streak warnings
+- Monthly Trend Charts: 12-month area chart of nutrition score and meal consistency
+- Pantry Auto-Deduction: cooking a recipe now automatically deducts matched pantry ingredients
+- Adaptive Quest Difficulty: daily missions scale up to 5 tiers as player level increases
+- Smart Badges: 4 new achievements — Data Starter, Insight Seeker, Nutrition Analyst, AI Master Chef
+- Smart Intelligence Dashboard: bento-grid layout with 4-column CSS Grid and uniform row heights
 
 ### v1.2 — Full Experience Update (Mar 2025)
 - Nutrition Dashboard redesigned with health indicator, food-source charts, calorie trends, and macro balance widgets
@@ -312,7 +344,7 @@ All data is stored locally in the browser's `localStorage` via Zustand persist m
 
 ## 10. License
 
-Copyright © 2025 Renkai Studios. All rights reserved.
+Copyright © 2026 Renkai Studios. All rights reserved.
 
 ---
 

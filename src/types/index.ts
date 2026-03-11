@@ -195,7 +195,7 @@ export interface BossCondition {
 }
 
 export type BadgeTier = 'bronze' | 'silver' | 'gold' | 'platinum';
-export type BadgeCategory = 'meals' | 'home-cook' | 'recipes' | 'streak' | 'level' | 'quests';
+export type BadgeCategory = 'meals' | 'home-cook' | 'recipes' | 'streak' | 'level' | 'quests' | 'smart';
 
 export interface Badge {
   id: string;
@@ -340,4 +340,107 @@ export interface AppNotification {
   message: string;
   timestamp: string;
   read: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Phase 3 — Intelligent Systems
+// ---------------------------------------------------------------------------
+
+/** Result of auto-estimating nutrition from a meal name + portion */
+export interface NutritionEstimate {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  confidence: 'high' | 'medium' | 'low';
+  matchedFood?: string;
+}
+
+/** Portion descriptor used for meal recognition */
+export type PortionSize = 'small' | 'medium' | 'large' | 'extra-large' | 'half' | 'double';
+
+/** A smart meal suggestion */
+export interface MealSuggestion {
+  id: string;
+  name: string;
+  reason: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  tags: string[];
+  score: number; // relevance score 0-100
+}
+
+/** A predicted grocery item */
+export interface GroceryPrediction {
+  name: string;
+  reason: string;
+  urgency: 'low' | 'medium' | 'high';
+  estimatedDaysUntilOut: number;
+  category?: string;
+}
+
+/** A nutrition insight generated from user data */
+export interface NutritionInsight {
+  id: string;
+  type: 'positive' | 'warning' | 'neutral';
+  icon: string;
+  title: string;
+  message: string;
+  category: 'consistency' | 'macros' | 'hydration' | 'habits' | 'progress';
+  generatedAt: string;
+}
+
+/** A detected habit pattern */
+export interface HabitPattern {
+  id: string;
+  type: 'positive' | 'negative' | 'neutral';
+  pattern: string;
+  suggestion?: string;
+  frequency: number; // how many times detected
+  lastDetected: string;
+}
+
+/** Smart notification (scheduled/contextual) */
+export interface SmartNotification {
+  id: string;
+  type: 'meal-reminder' | 'hydration' | 'grocery' | 'pantry-expiry' | 'insight';
+  message: string;
+  scheduledFor?: string; // ISO datetime
+  dismissed: boolean;
+  createdAt: string;
+}
+
+/** Daily nutrition score summary */
+export interface DailyNutritionScore {
+  date: string;
+  score: number; // 0-100
+  breakdown: {
+    mealConsistency: number;   // 0-25
+    nutritionBalance: number;  // 0-30
+    hydration: number;         // 0-20
+    sugarControl: number;      // 0-15
+    homeCooked: number;        // 0-10
+  };
+  grade: 'S' | 'A' | 'B' | 'C' | 'D' | 'F';
+}
+
+/** Long-term trend data point */
+export interface TrendDataPoint {
+  date: string;
+  value: number;
+}
+
+/** Monthly nutrition trend summary */
+export interface MonthlyTrend {
+  month: string; // YYYY-MM
+  avgCalories: number;
+  avgProtein: number;
+  avgCarbs: number;
+  avgFat: number;
+  avgWater: number;
+  avgScore: number;
+  totalMeals: number;
+  consistency: number; // % of days with meals logged
 }

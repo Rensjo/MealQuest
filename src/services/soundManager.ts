@@ -24,7 +24,7 @@ const SFX_FILES: Record<SfxName, string> = {
   'level-up':      '/level-up-sound.mp3',
 };
 
-const MUSIC_FILE = '/Lonely-by-purrple-cat-background-music.MP3';
+const MUSIC_FILE = '/Lonely-by-purrple-cat-background-music.mp3';
 
 // ---------------------------------------------------------------------------
 // SoundManager class
@@ -72,6 +72,7 @@ class SoundManager {
 
   /** Call once at app start to warm browser audio cache. */
   preloadAll(): void {
+    // Preload SFX
     for (const src of Object.values(SFX_FILES)) {
       if (!this.sfxCache.has(src)) {
         const a = new Audio();
@@ -79,6 +80,16 @@ class SoundManager {
         a.src = src;
         this.sfxCache.set(src, a);
       }
+    }
+    // Preload background music early so it is fully buffered by the time the
+    // user first clicks. Creating the Audio element here (outside the click
+    // handler) ensures WebView2's user-gesture context is not needed for the
+    // network fetch — only for the final .play() call.
+    if (!this.music) {
+      this.music = new Audio(MUSIC_FILE);
+      this.music.loop = true;
+      this.music.preload = 'auto';
+      this.music.volume = 0; // silent until user clicks
     }
   }
 
@@ -129,6 +140,7 @@ class SoundManager {
   playBackgroundMusic(): void {
     const vol = this.musicVol;
 
+    // Element should already exist from preloadAll(); create as fallback.
     if (!this.music) {
       this.music = new Audio(MUSIC_FILE);
       this.music.loop = true;
@@ -143,7 +155,19 @@ class SoundManager {
     }
 
     if (!this.musicStarted || this.music.paused) {
-      this.music.play().catch(() => { /* autoplay restriction */ });
+      const promise = this.music.play();
+      if (promise !== undefined) {
+        promise.catch((err: unknown) => {
+          // Autoplay was blocked — retry once after a short delay.
+          // This covers WebView2 edge cases where the gesture context
+          // expires before the initial buffer is ready.
+          if ((err as { name?: string })?.name === 'NotAllowedError') {
+            setTimeout(() => {
+              this.music?.play().catch(() => {});
+            }, 300);
+          }
+        });
+      }
       this.musicStarted = true;
     }
   }

@@ -817,19 +817,20 @@ export default function NutritionDashboard() {
         </div>
       </div>
 
-      {/* ROW 5 — 74% (Grocery top + Pantry bottom) | 26% Nutrition Goals full height */}
-      <div>
+      {/* ROW 5 — Goals & Supplies (Bento Grid) */}
+      <div className="space-y-4">
         <SectionTitle sub="Targets, pantry inventory and planned shopping">Goals & Supplies</SectionTitle>
-        <div className="flex gap-4 items-stretch">
-          {/* Left 74%: Grocery (top) + Pantry (bottom) */}
-          <div className="flex flex-col gap-4" style={{ width: '74%', minWidth: 0 }}>
-            <GroceryWidget />
-            <PantryWidget />
-          </div>
-          {/* Right 26%: Nutrition Goals spanning full height */}
-          <div className="flex-shrink-0" style={{ width: '26%', minWidth: 0 }}>
-            <NutritionGoalsWidget className="h-full" />
-          </div>
+        {/*
+         * Bento layout — 4-column CSS grid
+         *  Row 1 │ Grocery Widget  (col-span-3) │ Nutrition Goals (col-span-1, row-span-2) │
+         *  Row 2 │ Pantry Widget   (col-span-3) │ [Goals spans down]                       │
+         */}
+        <div className="grid grid-cols-4 gap-4">
+          {/* ── Row 1 ── */}
+          <div className="col-span-3 h-full"><GroceryWidget /></div>
+          <div className="row-span-2 h-full"><NutritionGoalsWidget className="h-full" /></div>
+          {/* ── Row 2 ── */}
+          <div className="col-span-3 h-full"><PantryWidget /></div>
         </div>
       </div>
 

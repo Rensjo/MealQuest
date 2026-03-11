@@ -1410,7 +1410,7 @@ export function NutritionGoalsWidget({ className }: NutritionGoalsWidgetProps) {
   const arcLen      = 2 * Math.PI * 18; // ≈ 113.1
 
   return (
-    <WidgetCard className="p-4 flex flex-col gap-3">
+    <WidgetCard className={cn('p-4 flex flex-col gap-3', className)}>
 
       {/* Header */}
       <div className="flex items-center justify-between">

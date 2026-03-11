@@ -29,11 +29,24 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'ui-vendor': ['framer-motion', 'lucide-react', 'recharts'],
-          'state-vendor': ['zustand'],
-          'utils-vendor': ['nanoid', 'date-fns', 'clsx'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-dom') || id.includes('react/')) {
+              return 'react-vendor';
+            }
+            if (id.includes('framer-motion') || id.includes('lucide-react')) {
+              return 'ui-vendor';
+            }
+            if (id.includes('recharts')) {
+              return 'chart-vendor';
+            }
+            if (id.includes('zustand')) {
+              return 'state-vendor';
+            }
+            if (id.includes('nanoid') || id.includes('date-fns') || id.includes('clsx') || id.includes('tailwind-merge')) {
+              return 'utils-vendor';
+            }
+          }
         },
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
@@ -52,7 +65,7 @@ export default defineConfig({
     cors: true,
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'zustand', 'framer-motion', 'lucide-react', 'recharts', 'nanoid', 'date-fns', 'clsx'],
+    include: ['react', 'react-dom', 'zustand', 'framer-motion', 'lucide-react', 'recharts', 'nanoid', 'date-fns', 'clsx', 'tailwind-merge'],
     esbuildOptions: { target: 'esnext' },
   },
   esbuild: {

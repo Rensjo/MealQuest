@@ -1,0 +1,440 @@
+═══════════════════════════════════════════════════════════════
+  MEALQUEST — 10-SLIDE FEATURE PRESENTATION SCRIPT
+  Version: v1.3.0 · March 2026 · Renkai Studios
+═══════════════════════════════════════════════════════════════
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 1: Hero Landing — App Introduction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Level Up Your Nutrition Journey"
+
+Subtitle:
+"The gamified nutrition tracking desktop app — log meals, earn XP,
+  and unlock smart AI-powered insights. All offline. All private."
+
+Tag Label:
+"v1.3 — Smart Intelligence Update · March 2026"
+
+Key Features Callouts:
+  🔒  Fully Offline & Private — Zero servers, zero telemetry, zero accounts
+  🌍  Windows · macOS · Linux — Cross-platform via Tauri v2 desktop shell
+  ⚛️  React 18 + TypeScript 5.5 — Modern, type-safe frontend stack
+  🧠  16 Zustand Stores — Comprehensive local state management
+  ✨  7 Smart Intelligence Widgets — AI-style analytics, all computed locally
+
+Stats Row:
+  5    App Pages
+  28   Unlockable Badges
+  25   Daily Quest Pool
+  10   Rotating Weekly Bosses
+  ∞    XP Levels — no cap
+
+Call to Action:
+"Begin Your Nutrition Quest"
+
+Screenshot Focus:
+  - Full hero screen with amber radial glow gradient background
+  - Display the version tag pill centered at top
+  - Show all 5 stat numbers prominently in a horizontal row
+  - Highlight the 5 callout keyword pills below the subtitle
+  - Capture the dark (#0f0f13) base with amber (#f59e0b) brand accents
+  - Include the app name "🍽 MealQuest" in the top navigation
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 2: App Overview — What's Inside
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Everything You Need to Eat Smarter"
+
+Subtitle:
+"Five core pages. One seamless experience. Zero internet required."
+
+Tag Label:
+"App Overview"
+
+Key Features Callouts:
+  🏠  Nutrition Dashboard — Daily command center with meals, trackers, charts, and Smart Intelligence
+  📝  Meal Log — Rapid food entry with auto-nutrition estimation and date navigation
+  🍱  Food Hub — Unified Recipes, Pantry, and Grocery with automatic cross-syncing
+  🎯  Nutrition Goals — Editable macro targets with diet strategy presets and live progress rings
+  ⚙️  Settings & Badges — Preferences, audio controls, data backup, and 28-badge gallery
+  🔒  100% Offline & Private — All data lives in localStorage via Zustand persist
+
+Tech Stack Callouts:
+  ⚛️  Built with React 18.3 + TypeScript 5.5
+  🦀  Tauri v2 cross-platform desktop shell (Rust)
+  🎨  Tailwind CSS 3.4 + Framer Motion 11 animations
+  📊  Recharts 3.2 for all data visualizations
+
+Call to Action:
+"Explore Every Feature"
+
+Screenshot Focus:
+  - 3-column card grid showing all 6 feature cards
+  - Each card with its icon background tint (amber, green, purple, blue, amber, amber)
+  - Tech stack pills visible at the bottom row
+  - Blue radial glow emanating from the right side of the background
+  - Show card hover border-glow effect on the "100% Offline" card (amber border)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 3: Page 1 — Nutrition Dashboard
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Your Daily Command Center"
+
+Subtitle:
+"Everything about today's nutrition at a glance — meals, health status,
+  charts, and real-time macro progress. All in one scrollable page."
+
+Tag Label:
+"Page 1 — Nutrition Dashboard"
+
+Key Features Callouts:
+  🍽  4 Meal Slots — Color-coded Breakfast, Lunch, Dinner, Snack with live calorie totals
+  📊  Health Indicator — 7-day and 30-day balance analysis rated Great / Good / Fair / Poor / Critical
+  💧  Water & Sweet Trackers — Animated SVG progress rings with drink-type tabs
+  📈  Calorie Trend Chart — Recharts line chart with daily history and goal overlay line
+  🎨  Macro Balance Pie — Protein / Carbs / Fat distribution donut chart
+  🗓  Meal Heatmap — 7-day or 30-day calendar showing logging intensity per day
+
+Call to Action:
+"See Your Full Nutrition Picture"
+
+Screenshot Focus:
+  - Two-column layout: left = app mockup window, right = feature list cards
+  - Mockup shows the 3 meal slots (Breakfast ✓, Lunch ✓, Dinner = pending in amber)
+  - "Total Today: 1,100 / 2,000 kcal" card with amber progress bar at 55%
+  - Water card showing 1,500ml / 2,500ml with cyan progress bar
+  - Health status "Good" shown in green with upward trend indicator
+  - Macro row (Protein 88g · Carbs 145g · Fat 38g) with color-coded per-macro bars
+  - Mockup window has the macOS-style traffic-light dots in the title bar
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 4: Page 2 — Meal Log
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Log Meals in Seconds"
+
+Subtitle:
+"Type a food name, select your portion, and auto-estimated nutrition
+  is filled in instantly — no manual lookup, no calorie counting grind."
+
+Tag Label:
+"Page 2 — Meal Log"
+
+Key Features Callouts:
+  🔍  Smart Food Search — Real-time autocomplete from built-in database, no internet needed
+  ⚖️  Portion Presets — Small / Medium / Large / Extra Large; nutrition scales automatically
+  🏠  Food-Source Tagging — Label each meal: Home-Cooked · Fast-Food · Dine-Out · Street-Food · Processed
+  📅  Week View Navigation — 7-day mini calendar with meal-count badges per day
+  ✏️  Manual Override — Edit any auto-estimated value (calories, protein, carbs, fat, water)
+  ⚡  XP Preview — See XP earned before logging; diet strategy multiplier shown inline
+
+Call to Action:
+"Log Your First Meal"
+
+Screenshot Focus:
+  - Mockup on the RIGHT side with feature cards on the LEFT
+  - Week-day nav strip at top: 7 day tiles, Tuesday highlighted in amber (today)
+  - Add Meal form card with green border accent
+  - Food search input showing "Chicken Breast, 200g…" with dropdown arrow
+  - Portion buttons: Small, Medium (selected in green), Large, XL
+  - Auto-estimated macro grid: 330 kcal (amber) · 62g protein (blue) · 0g carbs · 7g fat (orange)
+  - Green "Log Meal · +15 XP" submit button at the bottom of the form
+  - Two logged meals below: Oatmeal (Breakfast · Home-Cooked · 310 kcal) and Chicken Rice (Lunch · Dine-Out · 580 kcal)
+  - Green radial glow on the left side background
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 5: Page 3 — Food Hub
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Recipes · Pantry · Grocery"
+
+Subtitle:
+"A unified food operations center — create recipes, track pantry stock,
+  and manage your shopping list with automatic syncing between all three."
+
+Tag Label:
+"Page 3 — Food Hub"
+
+Key Features Callouts:
+  📖  Recipe Vault — Create recipes with macros, prep/cook time, tags, and favorite toggle
+  📦  Pantry Manager — Inventory tracking with expiry dates, low-stock alerts, and ± adjustments
+  🛒  Grocery List — Add items with price, store, and priority; total cost calculated in real time
+  🔄  Auto-Deduction (Phase 3) — Cooking a recipe automatically deducts matched pantry ingredients
+  ⭐  Favorites Filter — Quickly surface your go-to recipes with star toggle
+  💰  Cost Tracking — Estimated grocery total visible at a glance with purchased/remaining counts
+
+Call to Action:
+"Build Your Recipe Vault"
+
+Screenshot Focus:
+  - Mockup on the LEFT, feature cards on the RIGHT
+  - Three tabs visible at top: "📖 Recipes" (active, purple), "📦 Pantry" (inactive), "🛒 Grocery" (inactive)
+  - Filter chips: All · ★ Favorites (amber active) · ⚡ Quick
+  - Two recipe cards shown: "Chicken Stir-Fry" (★ favorited, 520 kcal, 42g protein, 35g carbs) and "Avocado Toast" (☆, 380 kcal)
+  - Green info banner at bottom: "Cooking a recipe auto-deducts matched pantry ingredients"
+  - Purple radial glow on the right side background
+  - Macro chips (blue for kcal, green for protein, amber for carbs) visible on recipe cards
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 6: Page 4 — Nutrition Goals
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Set Targets. Pick a Strategy. Hit Goals."
+
+Subtitle:
+"Five diet strategy presets auto-sync your macro targets. Watch real-time
+  progress bars update as you log meals throughout the day."
+
+Tag Label:
+"Page 4 — Nutrition Goals"
+
+Key Features Callouts:
+  ⚡  Diet Strategy Presets — One-click: 🎯 Balanced · 💪 High Protein · 🥑 Keto · 🌱 Plant-Based · ⚡ Performance
+  🎯  Editable Targets — Custom Calories, Protein (g), Carbs (g), Fat (g), Water (ml) per day
+  💍  Real-time Progress Rings — Animated SVG rings update live as meals are logged
+  📊  7-Day Rolling Averages — See weekly trending vs each goal alongside today's progress
+  🏆  Goals Met Badge — Top-right counter: how many of your 5 daily targets you've hit today
+  💎  XP Multipliers — Active strategy awards +5% to +15% XP on every meal logged
+
+Call to Action:
+"Choose Your Diet Strategy"
+
+Screenshot Focus:
+  - Feature cards on the LEFT, mockup on the RIGHT
+  - Strategy row: 5 buttons; "💪 High Protein" highlighted in blue with active border
+  - Blue banner at top of mockup: "Active Strategy: 💪 High Protein · +10% XP"
+  - 2×2 macro progress grid: Calories (amber bar, 55%), Protein (blue bar, 59%), Carbs (amber 58%), Water (cyan 60%)
+  - Each cell shows: current value · goal value · 7-day average
+  - "Goals Met Today: 2 / 5" green banner at the bottom of the mockup
+  - Blue radial glow on the left side background
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 7: Gamification System
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Eat Well. Earn XP. Level Up."
+
+Subtitle:
+"Every meal logged, goal hit, and streak maintained earns you experience
+  points. Complete daily missions, defeat weekly bosses, and unlock tier badges."
+
+Tag Label:
+"Gamification System"
+
+Key Features Callouts:
+  ⚡  XP System — +20 breakfast · +15 lunch/dinner · +10 snack · up to +15% streak bonus
+  🎯  Daily Missions — 5 quests from a 25-quest pool, adaptive difficulty scaling 5 tiers
+  ⚔️  Weekly Boss Battles — 10 rotating bosses, 3 conditions each, large XP reward on victory
+  🔥  Streak System — 3 streaks: Breakfast · Hydration · Home-Cooked; milestones at 3/7/14/30 days
+  🏆  28 Badges · 4 Tiers — Bronze · Silver · Gold · Platinum across Meals, Streaks, Levels, Quests, Smart
+  🔔  Activity Notifications — Color-coded floating toasts for every meaningful in-app action
+
+Call to Action:
+"Claim Your First Badge"
+
+Screenshot Focus:
+  - Mockup on the LEFT for missions + boss panel
+  - Player card at top: avatar circle with gradient, "NutritionHero · Lv.12", XP bar at 83% (4,250 / 5,120 XP)
+  - Daily Missions header with "3/5" in green
+  - Three mission cards: "Breakfast Champion ✓ (+20 XP)" · "Hydration Goal ✓ (+30 XP)" · "Home Cook Hero ☐ (+35 XP)"
+  - Completed missions show solid green check circles
+  - Weekly Boss card below: 👹 "The Sugar Demon" — "ACTIVE" red pill badge
+  - Boss HP bar: red-to-orange gradient at 33% fill (1/3 conditions met)
+  - "150 XP reward" shown in amber
+  - Feature cards on the RIGHT in 2×2 grid (XP, Missions, Boss, Streaks)
+  - Full-width Badge card at bottom showing all 4 tier pills: Bronze · Silver · Gold · Platinum
+  - Amber radial glow on the right side background
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 8: Smart Intelligence — Phase 3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Your Personal Nutrition AI"
+
+Subtitle:
+"Seven intelligent widgets analyze your data locally — no server, no ML API.
+  Pure algorithmic intelligence powered entirely by your own meal history."
+
+Tag Label:
+"Phase 3 — Smart Intelligence"
+
+Key Features Callouts:
+  🏆  Nutrition Score — Daily 0–100 score with S–F letter grade across 5 weighted categories
+  💡  Weekly Insights Engine — Auto-detects patterns: protein trends, hydration dips, breakfast consistency
+  🧠  Habit Pattern Detection — Identifies positive and negative eating habits from 14+ days of data
+  🍽  Meal Suggestion Engine — Personalized recommendations scored by strategy alignment and pantry match
+  🛒  Predictive Grocery System — Forecasts what to buy based on consumption frequency and pantry stock
+  📈  Monthly Trend Chart — 12-month Recharts area chart of nutrition score and meal consistency
+  🔔  Smart Notifications — Context-aware reminders: meal time alerts, hydration nudges, streak warnings
+
+Call to Action:
+"Unlock Your Nutrition Intelligence"
+
+Screenshot Focus:
+  - Bento-grid mockup prominently displayed on the LEFT side
+  - Top row (4 cols): NutritionScoreCard (1 col, green border, score "82" + grade "A") | InsightPanel (2 col, 4 insight bullets) | HabitPatternCard (1 col, 3 habits with green/red dots)
+  - Middle row: MonthlyTrendChart (3 col, cyan area chart bars for 12 months) | GroceryPredictionPanel (1 col, "Chicken 92% · Eggs 87% · Oats 81%")
+  - Bottom row: MealSuggestionPanel (4 col full width, 3 meal cards in a grid)
+  - Feature list on the RIGHT in single-column layout
+  - Each right-side card has a colored border accent matching its category (green score, amber insights, purple suggestions, cyan grocery)
+  - Cyan radial glow on the right side background
+  - Show the CSS Grid uniform row-height effect clearly (all cards in the same row share the same height)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 9: Settings, Analytics & Weekly Review
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Track Progress. Control Everything."
+
+Subtitle:
+"Deep analytics charts, weekly graded reviews, a full badge gallery,
+  data backup/restore, and granular audio controls — all in one place."
+
+Tag Label:
+"Settings · Analytics · Weekly Review"
+
+Key Features Callouts:
+  📊  Analytics — 7-day / 30-day line and bar charts; macro distribution pie chart via Recharts
+  📋  Weekly Review — S–F letter grade for each week based on average nutrition score; daily breakdown grid
+  🔥  Streak Tracker — 3 active streaks displayed with current days, longest-ever, and milestone checkmarks
+  🏆  Badge Gallery (28) — All badges with tier styling, progress, XP reward, and unlock date
+  ⚙️  Settings — Sound toggles, per-channel volume sliders, animation on/off, editable username
+  💾  Data Management — Export app state as JSON · Import from backup · Reset all data with confirmation
+  📋  What's New Changelog — Full version history: v1.0 launch through v1.3 Smart Intelligence
+
+Call to Action:
+"Back Up Your Progress"
+
+Screenshot Focus:
+  - 3-column layout: analytics mockup (spans 2 cols on left) + settings feature cards (1 col right)
+  - Analytics mockup shows 2×2 inner grid:
+      Top-left: Calorie Trend bar chart, amber bars rising over 9 data points, goal line at 2,000 kcal
+      Top-right: Weekly Review card — large "B" grade in green, "Good Week! · Avg 1,850 kcal · 6/7 days"
+      Bottom-left: Streak panel — Breakfast 14 days (amber) · Hydration 7 days (cyan) · Home-Cook 5 days (green)
+      Bottom-right: Recent Badges — Meal Master (Gold) · Insight Seeker (Silver) · Nutrition Analyst (Bronze)
+  - Settings feature cards on the right: Settings, Data Management, Changelog, Badge Gallery
+  - Purple radial glow on the left side background
+  - Tier pills (Bronze · Silver · Gold) visible on badge rows
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📱 Slide 10: Call to Action — Download & Tech Stack
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Title:
+"Start Your Quest Today"
+
+Subtitle:
+"MealQuest is free, open-source, and fully offline. No subscription,
+  no account, no data leaving your device. Just you, your nutrition
+  goals, and the adventure ahead."
+
+Tag Label:
+"v1.3.0 — Available Now"
+
+Key Features Callouts:
+  ⭐  Star on GitHub — Follow development and contribute at github.com/Rensjo/MealQuest
+  ↓   Download Release — Pre-built installers for every platform on the GitHub Releases page
+  🪟  Windows — MSI Installer + NSIS portable installer
+  🍎  macOS — Universal DMG (Apple Silicon + Intel)
+  🐧  Linux — AppImage + DEB package
+
+Tech Stack Cards:
+  ⚛️  Frontend Stack
+      React 18.3 + TypeScript 5.5
+      Tailwind CSS 3.4
+      Framer Motion 11
+      Recharts 3.2
+
+  🦀  Desktop Shell
+      Tauri v2 (Rust backend)
+      Vite 5.4 build tool
+      GitHub Actions CI/CD
+      4 automated workflow pipelines
+
+  💾  Data & State
+      Zustand 4.5 + persist middleware
+      16 stores · localStorage only
+      JSON export/import backup
+      0 external API calls — ever
+
+Call to Action (Primary):
+"⭐ Star on GitHub"
+
+Call to Action (Secondary):
+"↓ Download Release"
+
+Screenshot Focus:
+  - Centered layout with amber radial glow rising from the bottom
+  - Two CTA buttons side by side: amber filled "⭐ Star on GitHub" and amber-outlined "↓ Download Release"
+  - Three platform badge chips below buttons: 🪟 Windows · 🍎 macOS · 🐧 Linux
+  - 3-column tech stack cards at the bottom: Frontend (dark bg), Desktop Shell (amber border accent), Data & State (dark bg)
+  - Footer bar visible at very bottom: "MealQuest v1.3.0 · Mar 2026 · Renkai Studios · React + TypeScript + Tauri v2"
+  - Credit line: "Built by Renkai Studios · Part of the QuestlyKai Ecosystem"
+  - The amber glow orb softly illuminates from below giving a warm cinematic finish
+
+
+═══════════════════════════════════════════════════════════════
+  PRESENTATION NOTES
+═══════════════════════════════════════════════════════════════
+
+Navigation:
+  ← →   Arrow keys advance / go back
+  Space   Advance to next slide
+  Dot nav   Click any dot at the top for direct jump
+  Prev / Next buttons   Visible in top-right nav bar
+
+Design System:
+  Background:   #0f0f13 (near-black)
+  Card surface: #1a1a24 / #22222f
+  Brand accent: #f59e0b (amber)
+  Green:        #22c55e
+  Blue:         #3b82f6
+  Purple:       #a855f7
+  Cyan:         #06b6d4
+  Orange:       #f97316
+  Muted text:   #8b8fa8
+
+Glow Colors per slide:
+  Slide 1 (Hero):              Amber top-center glow
+  Slide 2 (Overview):          Blue right-side glow
+  Slide 3 (Dashboard):         Neutral dark background
+  Slide 4 (Meal Log):          Green left-side glow
+  Slide 5 (Food Hub):          Purple right-side glow
+  Slide 6 (Goals):             Blue left-side glow
+  Slide 7 (Gamification):      Amber right-side glow
+  Slide 8 (Smart Intelligence): Cyan center glow
+  Slide 9 (Settings):          Purple left-side glow
+  Slide 10 (CTA):              Amber bottom-center glow
+
+File Location:
+  presentation/index.html   — Interactive HTML presentation (navigate with arrow keys)
+  presentation/script.txt   — This script file
+
+Repository:
+  https://github.com/Rensjo/MealQuest
+
+═══════════════════════════════════════════════════════════════
+  END OF SCRIPT
+═══════════════════════════════════════════════════════════════

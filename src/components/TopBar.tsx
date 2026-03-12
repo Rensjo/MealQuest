@@ -4,7 +4,7 @@
 // Brand button (merged nav toggle) · status pills · level/XP/streak ·
 // Profile + Goals icon buttons  — NO separate hamburger
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Flame,
@@ -14,6 +14,8 @@ import {
   User,
   Target,
   ChevronDown,
+  Wifi,
+  WifiOff,
 } from 'lucide-react';
 import { cn } from '@/utils';
 import { useXPStore } from '@/stores/xpStore';
@@ -62,6 +64,19 @@ export function TopBar({
   );
 
   const pendingCount = activeMissions.length;
+
+  // ── Online / offline status ──
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine);
+  useEffect(() => {
+    const handleOnline  = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    window.addEventListener('online',  handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online',  handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   const today = new Date().toLocaleDateString('en-US', {
     month: 'short',
@@ -130,9 +145,24 @@ export function TopBar({
             <Calendar size={11} />
             {today}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-green-500/32 bg-green-500/10 px-3 py-1.5 text-xs font-semibold text-green-400">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-green-400" />
-            Online
+          <span className={cn(
+            'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all duration-500',
+            isOnline
+              ? 'border-green-500/32 bg-green-500/10 text-green-400'
+              : 'border-red-500/32 bg-red-500/10 text-red-400',
+          )}>
+            {isOnline ? (
+              <>
+                <Wifi size={11} className="animate-none" />
+                <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+                Online
+              </>
+            ) : (
+              <>
+                <WifiOff size={11} />
+                Offline
+              </>
+            )}
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/32 bg-brand/10 px-3 py-1.5 text-xs font-semibold text-brand">
             <Zap size={11} />

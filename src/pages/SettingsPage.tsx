@@ -36,8 +36,22 @@ import type { Badge, BadgeTier } from '@/types';
 
 const WHATS_NEW: { version: string; date: string; entries: string[] }[] = [
   {
-    version: 'v1.3 — Smart Intelligence Update',
+    version: 'v1.4 — Food Intelligence Update',
     date: 'Mar 2026',
+    entries: [
+      'Real food database: USDA FoodData Central API integration — millions of foods with accurate macros',
+      'Rewritten food matching algorithm: longest-phrase-wins logic fixes wrong suggestions (e.g. "siomai rice" no longer matches just "rice")',
+      'Strict whole-word matching eliminates false positives like "matcha frappe" matching unrelated foods',
+      'Expanded Filipino & drink database: 80+ new entries including frappes, boba, milk tea, silog meals, sisig, street food combos',
+      'Quick Meal Log suggestions now show an "online" badge for USDA API results',
+      'Background music fix for Tauri/WebView2: autoplay policy override, early preload, and .mp3 MIME fix',
+      'Blank screen fix for desktop build: resolved Vite circular chunk dependency collapsing React initialization',
+      'Online/Offline indicator in the top bar now reflects real network connectivity',
+    ],
+  },
+  {
+    version: 'v1.3 — Smart Intelligence Update',
+    date: 'Feb 2026',
     entries: [
       'Smart Nutrition Score: daily 0–100 score with S–F grade and 5-category breakdown (meal consistency, macros, hydration, sugar control, home-cooked)',
       'Weekly Insights engine: auto-detects meal consistency, protein trends, hydration levels, and home-cooking ratios',
@@ -486,7 +500,7 @@ export default function SettingsPage() {
           <Sparkles size={15} className="text-brand" />
           <span className="text-sm font-bold text-white/90">What's New</span>
         </div>
-        <div className="space-y-4">
+        <div className="max-h-72 overflow-y-auto pr-1 space-y-4 scrollbar-thin scrollbar-thumb-brand/25 scrollbar-track-transparent">
           {WHATS_NEW.map((release) => (
             <div key={release.version} className="border-l-2 border-brand/25 pl-4 space-y-1.5">
               <div className="flex items-center gap-2">

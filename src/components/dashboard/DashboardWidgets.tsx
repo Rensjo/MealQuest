@@ -1447,8 +1447,7 @@ export function NutritionGoalsWidget({ className }: NutritionGoalsWidgetProps) {
               </linearGradient>
             </defs>
           </svg>
-          <span className="absolute inset-0 flex items-center justify-center text-[11px] font-black text-brand select-none"
-            style={{ transform: 'rotate(90deg)' }}>
+          <span className="absolute inset-0 flex items-center justify-center text-[11px] font-black text-brand select-none">
             {calPct}%
           </span>
         </div>

@@ -115,13 +115,17 @@ export function QuickMealLog({ className }: { className?: string } = {}) {
       return;
     }
 
-    // Trigger online search for obscure / non-Filipino foods
-    setIsLoadingApi(true);
+    // Trigger online search for obscure / non-Filipino foods.
+    // isLoadingApi is set to true INSIDE the timer so it only shows
+    // after the debounce fires — prevents the spinner from appearing
+    // on every keystroke while the user is still typing.
     let cancelled = false;
     const controller = new AbortController();
     apiAbortRef.current = controller;
 
     const timer = setTimeout(async () => {
+      if (cancelled) return;
+      setIsLoadingApi(true);
       try {
         const apiResults = await searchFoodOnline(foodName, controller.signal);
         if (!cancelled) {
@@ -295,7 +299,7 @@ export function QuickMealLog({ className }: { className?: string } = {}) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -4, scale: 0.98 }}
                 transition={{ duration: 0.15 }}
-                className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-brand/22 bg-[#1a0d00]/98 shadow-[0_8px_32px_rgba(0,0,0,0.65)] backdrop-blur-md"
+                className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-brand/40 bg-[#1f0d00] shadow-[0_8px_32px_rgba(0,0,0,0.80),0_0_0_1px_rgba(230,183,95,0.08)]"
               >
                 {suggestions.map((food) => (
                   <button
